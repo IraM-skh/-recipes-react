@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import { Redirect, Route, Switch } from "react-router";
+import RecipesPage from "./pages/RecipesPage";
+import PersonalAccountPage from "./pages/PersonalAccountPage";
+import CreateRecipePage from "./pages/CreateRecipePage";
+import RecipePage from "./pages/RecipiePage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <Header />
+      <Switch>
+        <Route path="/" exact>
+          <Redirect to="/recipes"></Redirect>
+        </Route>
+        <Route path="/recipes" exact>
+          <RecipesPage />
+        </Route>
+        <Route path="/pa" exact>
+          <PersonalAccountPage />
+        </Route>
+        <Route path="/create-recipe" exact>
+          <CreateRecipePage />
+        </Route>
+        <Route path="/recipe/:recipeId" exact>
+          <RecipePage></RecipePage>
+        </Route>
+      </Switch>
+      <Footer />
+    </Fragment>
   );
 }
 
