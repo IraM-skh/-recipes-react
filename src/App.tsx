@@ -7,9 +7,34 @@ import { Redirect, Route, Switch } from "react-router";
 import RecipesPage from "./pages/RecipesPage";
 import PersonalAccountPage from "./pages/PersonalAccountPage";
 import CreateRecipePage from "./pages/CreateRecipePage";
-import RecipePage from "./pages/RecipiePage";
+import RecipePage from "./pages/RecipePage";
+import getRecipesData from "./dataFromServer/Recipes";
+
+import { getHttp } from "./dataFromServer/httpRequest";
+import { RECIPES } from "./dataFromServer/Recipes";
 
 function App() {
+  getRecipesData();
+  (async function w1() {
+    const test = [1, 2, 3, 4];
+    const data = JSON.stringify(test);
+    // let recipesData = fetch(
+    //   "https://react-course-http-30914-default-rtdb.firebaseio.com//recipes.json",
+    //   {
+    //     method: "POST",
+    //     body: data,
+    //     headers: {
+    //       "Content-Type": "applicatio/json",
+    //     },
+    //   }
+    // );
+    const recipesData = await getHttp(
+      "https://recipes-7e232-default-rtdb.firebaseio.com/Recipes.json"
+    );
+
+    console.log(data);
+    console.log(recipesData);
+  })();
   return (
     <Fragment>
       <Header />
