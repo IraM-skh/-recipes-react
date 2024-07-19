@@ -10,7 +10,7 @@ type Ingridients = {
 };
 type Tags = {
   type: string[];
-  diet: string[];
+  diet?: string[];
 };
 
 export type Recipes = Array<IRecipesData>;

@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import fetchStatusSlice from "./slices/fetchStatus";
-import recipesListSlice from "./slices/recipesList";
+import fetchStatusSlice from "./slices/fetchStatusSlice";
+import recipesListSlice from "./slices/recipesListSlice";
 
 const store = configureStore({
   reducer: {
@@ -8,5 +8,10 @@ const store = configureStore({
     recipesList: recipesListSlice,
   },
 });
+
 export const useAppDispatch = () => store.dispatch;
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
 export default store;

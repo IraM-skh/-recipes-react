@@ -1,22 +1,28 @@
 import { Fragment } from "react/jsx-runtime";
 import RecipeCard from "../components/recipes/RecipeCard";
-import getRecipesData from "../dataFromServer/Recipes";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useAppDispatch } from "../store";
-import { getRecipesData1 } from "../store/slices/recipesList";
-import { useSelector } from "react-redux";
+
+import { getRecipesData } from "../store/slices/recipesListSlice";
+import { useAppSelector } from "../hooks";
+import { useAppDispatch } from "../hooks";
 
 const RecipesPage = () => {
+  const recipesList = useAppSelector((state) => state.recipesList.recipes);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getRecipesData1());
+    dispatch(getRecipesData());
   }, []);
+  const fetchStatus = useAppSelector((state) => state.status);
+  console.log(recipesList, "из страницы");
 
-  const recList = useSelector((state: any) => state.recipesList.recipes);
-  console.log("это слайс", recList);
-
-  return <Fragment>{/* <RecipeCard ></RecipeCard> */}</Fragment>;
+  return (
+    <Fragment>
+      {recipesList.map((recipe) => {
+        return <p>{recipe.title}</p>;
+      })}
+      <p>{fetchStatus.message} Это должен быть статус</p>
+    </Fragment>
+  );
 };
 
 export default RecipesPage;
