@@ -5,22 +5,29 @@ import { Recipes } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { useAppDispatch } from "..";
 
+//AsyncThunk
 export const getRecipesData = createAsyncThunk<
   Recipes,
   undefined,
   { rejectValue: string }
 >("recipesList/getRecipesData1", async (_, { rejectWithValue }) => {
-  let recipesData = await getHttp(
-    "https://recipes-7e232-default-rtdb.firebaseio.com/Recipes.json"
-  );
+  try {
+    let recipesData = await getHttp(
+      "https://recipes-7e232-default-rtdb.firebaseio.com/Recipes.json"
+    );
+    if (recipesData === null) {
+      recipesData = [];
+    }
 
-  if (recipesData === null) {
-    recipesData = [];
+    return recipesData;
+  } catch {
+    return rejectWithValue(
+      "Ошибка згрузки рецептов. Попробуйте обновить страницу."
+    );
   }
-
-  return recipesData;
 });
 
+//initialStates
 const initialStateRecipes: Recipes = [];
 const initialStateStatus: FetchStatus = {
   status: null,
@@ -44,7 +51,7 @@ const recipesListSlice = createSlice({
       // Вызывается прямо перед выполнением запроса
       .addCase(getRecipesData.pending, (state) => {
         state.status = "loading";
-        state.message = "Загрузка...";
+        state.message = "Загрузка рецептов";
       })
       // Вызывается, если запрос успешно выполнился
       .addCase(getRecipesData.fulfilled, (state, action) => {
@@ -52,8 +59,16 @@ const recipesListSlice = createSlice({
         state.message = "Данные получены";
         state.recipes = action.payload;
       });
-    // Вызывается в случае ошибки
-    // .addCase(getRecipesData.rejected, (state, action) => {});
+    builder.addCase(
+      getRecipesData.rejected,
+      (state, action: PayloadAction<string | undefined>) => {
+        if (typeof action.payload === "string") {
+          state.status = "failed";
+          state.message = action.payload;
+          state.recipes = [];
+        }
+      }
+    );
   },
 });
 export const recipesListSliceActions = recipesListSlice.actions;

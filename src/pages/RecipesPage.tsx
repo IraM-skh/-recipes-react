@@ -8,19 +8,23 @@ import { useAppDispatch } from "../hooks";
 
 const RecipesPage = () => {
   const recipesList = useAppSelector((state) => state.recipesList.recipes);
+  const statusLoadRecipes = useAppSelector((state) => state.recipesList.status);
+  const messageLoadRecipes = useAppSelector(
+    (state) => state.recipesList.message
+  );
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getRecipesData());
   }, []);
-  const fetchStatus = useAppSelector((state) => state.status);
-  console.log(recipesList, "из страницы");
 
   return (
     <Fragment>
-      {recipesList.map((recipe) => {
-        return <p>{recipe.title}</p>;
-      })}
-      <p>{fetchStatus.message} Это должен быть статус</p>
+      {statusLoadRecipes === "loading" && <p>{messageLoadRecipes}</p>}
+      {statusLoadRecipes !== "failed" &&
+        recipesList.map((recipe) => {
+          return <RecipeCard recipe={recipe} />;
+        })}
+      {statusLoadRecipes === "failed" && <p>{messageLoadRecipes}</p>}
     </Fragment>
   );
 };

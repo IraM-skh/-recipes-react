@@ -1,4 +1,4 @@
-interface IRecipesData {
+export interface IRecipesData {
   title: string;
   imgUrl: string;
   ingridients: Ingridients;
