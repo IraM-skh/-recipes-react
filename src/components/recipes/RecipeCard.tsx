@@ -25,6 +25,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
   return (
     <div className="recipe_card">
       <h3>{recipe.title}</h3>
+
       <img src={recipe.imgUrl} alt={recipe.title}></img>
       <p className="ingridients_list">{ingridientsList}</p>
       <p className="tags_type_list">Тип блюда: {tagsTypeList}</p>

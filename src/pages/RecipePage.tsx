@@ -1,5 +1,4 @@
 import { useParams } from "react-router";
-import getRecipesData from "../dataFromServer/Recipes";
 import { useEffect } from "react";
 
 const RecipePage = () => {

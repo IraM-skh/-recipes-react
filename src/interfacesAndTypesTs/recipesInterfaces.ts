@@ -3,6 +3,7 @@ export interface IRecipesData {
   imgUrl: string;
   ingridients: Ingridients;
   tags: Tags;
+  id: string;
 }
 
 type Ingridients = {
