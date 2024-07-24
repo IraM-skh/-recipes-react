@@ -10,6 +10,23 @@ import CreateRecipePage from "./pages/CreateRecipePage";
 import RecipePage from "./pages/RecipePage";
 
 function App() {
+  const tets = async () => {
+    console.log("тест бд");
+    const res = await fetch("https://api.sweb.ru/notAuthorized/", {
+      method: "POST",
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "getToken",
+        params: {
+          login: "makarovaio",
+          password: "GB&Su46VmDpG2rF8",
+        },
+      }),
+    });
+    const res1 = await res.json();
+    console.log(res1);
+  };
+  tets();
   return (
     <Fragment>
       <Header />

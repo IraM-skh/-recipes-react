@@ -1,5 +1,6 @@
 import React from "react";
 import { IRecipesData } from "../../interfacesAndTypesTs/recipesInterfaces";
+import { Link } from "react-router-dom";
 interface IRecipeCardProps {
   recipe: IRecipesData;
 }
@@ -24,7 +25,9 @@ const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
 
   return (
     <div className="recipe_card">
-      <h3>{recipe.title}</h3>
+      <Link to={`/recipe/${recipe.id}`}>
+        <h3>{recipe.title}</h3>
+      </Link>
 
       <img src={recipe.imgUrl} alt={recipe.title}></img>
       <p className="ingridients_list">{ingridientsList}</p>

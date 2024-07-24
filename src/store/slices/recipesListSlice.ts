@@ -1,16 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FetchStatus, fetchStatusSliceActions } from "./fetchStatusSlice";
+import { FetchStatus } from "./fetchStatusSlice";
 import { getHttp } from "../../dataFromServer/httpRequest";
 import { Recipes } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { useAppDispatch } from "..";
 
 //AsyncThunk
 export const getRecipesData = createAsyncThunk<
   Recipes,
   undefined,
   { rejectValue: string }
->("recipesList/getRecipesData1", async (_, { rejectWithValue }) => {
+>("recipesList/getRecipesData", async (_, { rejectWithValue }) => {
   try {
     let recipesData = await getHttp(
       "https://recipes-7e232-default-rtdb.firebaseio.com/Recipes.json"
