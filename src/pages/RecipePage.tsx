@@ -14,18 +14,20 @@ const tagRender = (tags: string[]) =>
 const RecipePage: React.FC = () => {
   const { recipeId } = useParams<{ recipeId?: string }>();
   const dispatch = useAppDispatch();
+  let isAddNewComment = false;
   useEffect(() => {
     if (typeof recipeId === "string") {
       dispatch(getRecipeData(recipeId));
     }
-  }, []);
+  }, [recipeId]);
   const specificRecipeData = useAppSelector((state) => state.specificRecipe);
   const recipe = specificRecipeData.recipe;
 
-  if (recipe !== null) {
+  if (recipe !== null && typeof recipeId === "string") {
     const ingridients = Object.entries(recipe.ingridients);
     const tagsType = recipe.tags.type;
     const tagsDiet = recipe.tags.diet;
+
     return (
       <Fragment>
         <div className="recipe_container">
@@ -54,8 +56,9 @@ const RecipePage: React.FC = () => {
           </div>
         </div>
         <div className="comments_container">
-          <CommentsList></CommentsList>
-          <NewComment></NewComment>
+          <CommentsList recipeId={recipeId}></CommentsList>
+
+          <NewComment recipeId={recipeId}></NewComment>
         </div>
       </Fragment>
     );

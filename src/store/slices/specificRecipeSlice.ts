@@ -3,7 +3,8 @@ import { FetchStatus } from "./fetchStatusSlice";
 import { getHttp } from "../../dataFromServer/httpRequest";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IRecipesData } from "../../interfacesAndTypesTs/recipesInterfaces";
-import { Comments } from "../../interfacesAndTypesTs/comments";
+import { Comment, Comments } from "../../interfacesAndTypesTs/comments";
+import { useAppDispatch } from "../../hooks";
 
 //AsyncThunk load recipe
 export const getRecipeData = createAsyncThunk<
@@ -29,17 +30,19 @@ export const getRecipeData = createAsyncThunk<
 
 export const getRecipeCooments = createAsyncThunk<
   Comments,
-  undefined,
+  string,
   { rejectValue: string }
->("specificRecipe/getRecipeCooments", async (_, { rejectWithValue }) => {
+>("specificRecipe/getRecipeCooments", async (idRecipe, { rejectWithValue }) => {
   try {
     let commentsData = await getHttp(
-      `https://recipes-7e232-default-rtdb.firebaseio.com/Comments.json`
+      `https://recipes-7e232-default-rtdb.firebaseio.com/Comments/${idRecipe}.json`
     );
     if (commentsData === null) {
       commentsData = [];
     }
 
+    commentsData = Object.values(commentsData);
+    console.log(commentsData, "загрузка данных о комментах");
     return commentsData;
   } catch {
     return rejectWithValue(
@@ -48,25 +51,54 @@ export const getRecipeCooments = createAsyncThunk<
   }
 });
 
+export const sendRecipeCooment = createAsyncThunk<
+  string,
+  Comment,
+  { rejectValue: string }
+>(
+  "specificRecipe/sendRecipeCooment",
+  async (commentData, { rejectWithValue }) => {
+    try {
+      await fetch(
+        `https://recipes-7e232-default-rtdb.firebaseio.com/Comments/${commentData.idRecipe}.json`,
+        {
+          method: "POST",
+          body: JSON.stringify(commentData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return commentData.idRecipe;
+    } catch {
+      return rejectWithValue(
+        "Ошибка отправки комментария. Попробуйте обновить страницу."
+      );
+    }
+  }
+);
+
 //initialStates
 interface IInitialStates extends FetchStatus {
   recipe: IRecipesData | null;
   comments: Comments | [];
+  addNewCommentStatus: boolean;
 }
 const initialState: IInitialStates = {
   recipe: null,
   status: null,
   message: null,
   comments: [],
+  addNewCommentStatus: false,
 };
 
 const specificRecipeSlice = createSlice({
   name: "specificRecipe",
   initialState,
   reducers: {
-    // update(state, action: PayloadAction<Recipes>) {
-    //   state.recipes = action.payload;
-    // },
+    resetNewCommentStatus(state) {
+      state.addNewCommentStatus = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -93,6 +125,9 @@ const specificRecipeSlice = createSlice({
       )
       .addCase(getRecipeCooments.fulfilled, (state, action) => {
         state.comments = action.payload;
+      })
+      .addCase(sendRecipeCooment.fulfilled, (state, action) => {
+        state.addNewCommentStatus = true;
       });
   },
 });

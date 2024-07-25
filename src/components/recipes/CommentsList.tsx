@@ -1,12 +1,28 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getRecipeCooments } from "../../store/slices/specificRecipeSlice";
+import {
+  getRecipeCooments,
+  specificRecipeSliceActions,
+} from "../../store/slices/specificRecipeSlice";
+import { useSelector } from "react-redux";
 
-const CommentsList: React.FC = () => {
+type CommentsListProps = {
+  recipeId: string;
+};
+const CommentsList: React.FC<CommentsListProps> = (props) => {
   const dispatch = useAppDispatch();
+  const isAddNewComment = useAppSelector(
+    (state) => state.specificRecipe.addNewCommentStatus
+  );
+
   useEffect(() => {
-    dispatch(getRecipeCooments());
-  }, []);
+    if (isAddNewComment) {
+      dispatch(getRecipeCooments(props.recipeId));
+      dispatch(specificRecipeSliceActions.resetNewCommentStatus());
+      return;
+    }
+    dispatch(getRecipeCooments(props.recipeId));
+  }, [isAddNewComment, props.recipeId]);
   const commentsList = useAppSelector((state) => state.specificRecipe.comments);
   return (
     <div className="comments_list_container">

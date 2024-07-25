@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Comment } from "../../interfacesAndTypesTs/comments";
+import { useAppDispatch } from "../../hooks";
+import {
+  getRecipeCooments,
+  sendRecipeCooment,
+} from "../../store/slices/specificRecipeSlice";
 
-const NewComment: React.FC = () => {
+type NewCommentProps = {
+  recipeId: string;
+};
+
+const NewComment: React.FC<NewCommentProps> = (props) => {
   const nameNewComment = React.createRef<HTMLInputElement>();
   const nameTextComment = React.createRef<HTMLTextAreaElement>();
+  const dispatch = useAppDispatch();
+
   const submitFormNewCommentHandler: React.FormEventHandler<HTMLFormElement> = (
     event
   ) => {
@@ -27,10 +39,26 @@ const NewComment: React.FC = () => {
       },
     };
     //добавить Отправку формы
-    console.log(nameNewComment.current?.value);
-    console.log(nameTextComment.current?.value);
-    console.log(commentDate.getStringDate());
+    if (nameNewComment.current && nameTextComment.current) {
+      const comment: Comment = {
+        id:
+          Math.random().toString() +
+          Math.random().toString() +
+          Math.random().toString() +
+          Math.random().toString(),
+        idRecipe: props.recipeId,
+        autor: nameNewComment.current.value,
+        date: commentDate.getStringDate(),
+        text: nameTextComment.current.value,
+      };
+
+      dispatch(sendRecipeCooment(comment));
+
+      nameNewComment.current.value = "";
+      nameTextComment.current.value = "";
+    }
   };
+
   return (
     //добавить загрузку изображения
     <form onSubmit={submitFormNewCommentHandler}>

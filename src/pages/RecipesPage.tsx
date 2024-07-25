@@ -21,8 +21,8 @@ const RecipesPage = () => {
     <Fragment>
       {statusLoadRecipes === "loading" && <p>{messageLoadRecipes}</p>}
       {statusLoadRecipes !== "failed" &&
-        recipesList.map((recipe) => {
-          return <RecipeCard recipe={recipe} />;
+        recipesList.map((recipe, index) => {
+          return <RecipeCard key={recipe.id + index} recipe={recipe} />;
         })}
       {statusLoadRecipes === "failed" && <p>{messageLoadRecipes}</p>}
     </Fragment>

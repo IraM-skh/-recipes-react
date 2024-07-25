@@ -1,5 +1,6 @@
 export type Comment = {
   id: string;
+  idRecipe: string;
   autor: string;
   date: string;
   text: string;
