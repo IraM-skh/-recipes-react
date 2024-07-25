@@ -24,7 +24,7 @@ const RecipePage: React.FC = () => {
   const recipe = specificRecipeData.recipe;
 
   if (recipe !== null && typeof recipeId === "string") {
-    const ingridients = Object.entries(recipe.ingridients);
+    const ingredients = Object.entries(recipe.ingredients);
     const tagsType = recipe.tags.type;
     const tagsDiet = recipe.tags.diet;
 
@@ -38,8 +38,8 @@ const RecipePage: React.FC = () => {
           )}
 
           <img src={recipe.imgUrl} alt={recipe.title}></img>
-          <ul className="ingridients_list">
-            {ingridients.map((ingridient, index) => {
+          <ul className="ingredients_list">
+            {ingredients.map((ingridient, index) => {
               return (
                 <div key={ingridient[0] + index}>
                   <span className="ingridient">{ingridient[0]}</span>

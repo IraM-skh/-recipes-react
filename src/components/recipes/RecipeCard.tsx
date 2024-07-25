@@ -10,9 +10,10 @@ const onlyFirstLatterToUpperCase = (string: string): string => {
 
 const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
   const recipe = props.recipe;
-  //ingridientsList
-  const ingridients = Object.keys(recipe.ingridients);
-  const ingridientsList = onlyFirstLatterToUpperCase(ingridients.join(", "));
+  //ingredientsList
+  console.log(recipe.ingredients);
+  const ingredients = Object.keys(recipe.ingredients);
+  const ingredientsList = onlyFirstLatterToUpperCase(ingredients.join(", "));
 
   //tags type
   const tagsTypeList = onlyFirstLatterToUpperCase(recipe.tags.type.join(", "));
@@ -30,7 +31,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
       </Link>
 
       <img src={recipe.imgUrl} alt={recipe.title}></img>
-      <p className="ingridients_list">{ingridientsList}</p>
+      <p className="ingredients_list">{ingredientsList}</p>
       <p className="tags_type_list">Тип блюда: {tagsTypeList}</p>
       {isExistDietTags && (
         <p className="tags_diet_list">Тэги диеты: {tagsDietList}</p>

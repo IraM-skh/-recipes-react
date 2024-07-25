@@ -1,12 +1,12 @@
 export interface IRecipesData {
   title: string;
   imgUrl: string;
-  ingridients: Ingridients;
+  ingredients: ingredients;
   tags: Tags;
   id: string;
 }
 
-type Ingridients = {
+type ingredients = {
   [key: string]: [number | string, string?];
 };
 type Tags = {
