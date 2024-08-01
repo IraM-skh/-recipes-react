@@ -3,21 +3,41 @@ import { PayloadAction } from "@reduxjs/toolkit";
 
 export type NewRecipeSlice = {
   recipeStepsArray: JSX.Element[];
-  numberOfrecipeSteps: number;
+  numberOfrecipeStepFields: number;
+  numberOfIngredientFields: number;
+  numberOfTagTypeFields: number;
   message: string | null;
+  imgFile: any;
+  imgSrc: string;
 };
 const initialState: NewRecipeSlice = {
   recipeStepsArray: [],
-  numberOfrecipeSteps: 1,
+  numberOfrecipeStepFields: 1,
+  numberOfIngredientFields: 1,
+  numberOfTagTypeFields: 1,
   message: null,
+  imgFile: "",
+  imgSrc: "",
 };
 
 const newRecipeSlice = createSlice({
   name: "recipesList",
   initialState,
   reducers: {
-    addStep(state) {
-      state.numberOfrecipeSteps++;
+    addStepFields(state) {
+      state.numberOfrecipeStepFields++;
+    },
+    addIngredientField(state) {
+      state.numberOfIngredientFields++;
+    },
+    addTagTypeField(state) {
+      state.numberOfTagTypeFields++;
+    },
+    setImage(state, action) {
+      state.imgFile = action.payload;
+    },
+    setImageSrc(state, action) {
+      state.imgSrc = action.payload;
     },
   },
 });

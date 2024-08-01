@@ -1,22 +1,46 @@
 import { Fragment } from "react/jsx-runtime";
 import Ingredient from "../components/createRecipe/Ingredient";
 import RecipeStep from "../components/createRecipe/RecipeStep";
-import { ReactEventHandler, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { newRecipeSliceActions } from "../store/slices/newRecipeSlice";
+import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
+import TagTypes from "../components/createRecipe/TagTypes";
 const CreateRecipePage: React.FC = () => {
-  const dispatch = useAppDispatch();
+  //-----types
+  type CrateRecipeActions =
+    | ActionCreatorWithoutPayload<"recipesList/addStepFields">
+    | ActionCreatorWithoutPayload<"recipesList/addIngredientField">
+    | ActionCreatorWithoutPayload<"recipesList/addTagTypeField">;
 
-  // useEffect(() => {
-  //   dispatch(newRecipeSliceActions.addStep(<RecipeStep />));
-  // }, []);
-  const RecipeStepsArray = useAppSelector(
-    (state) => state.newRecipe.recipeStepsArray
+  //-----get states and dispatch
+  const dispatch = useAppDispatch();
+  const numberOfrecipeStepFields = useAppSelector(
+    (state) => state.newRecipe.numberOfrecipeStepFields
   );
-  const addStepHandler: ReactEventHandler = () => {
-    dispatch(newRecipeSliceActions.addStep());
+  const numberOfIngredientFields = useAppSelector(
+    (state) => state.newRecipe.numberOfIngredientFields
+  );
+  const numberOfTagTypeFields = useAppSelector(
+    (state) => state.newRecipe.numberOfTagTypeFields
+  );
+
+  //-----Handlers
+  const addFieldHandler = (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    action: CrateRecipeActions
+  ): void => {
+    dispatch(action());
   };
 
+  //-----Create arrey for elements render
+  const returnArreyWhithNull = (numberOfElements: number): null[] =>
+    new Array(numberOfElements).fill(null);
+
+  const recipeSteps = returnArreyWhithNull(numberOfrecipeStepFields);
+  const ingredients = returnArreyWhithNull(numberOfIngredientFields);
+  const tagTypes = returnArreyWhithNull(numberOfTagTypeFields);
+
+  //-----JSX
   return (
     <Fragment>
       <input placeholder="Название рецепта" type="text"></input>
@@ -33,25 +57,45 @@ const CreateRecipePage: React.FC = () => {
         />
       </p>
       <div className="ingredients_container">
-        <Ingredient />
-        <button className="add_item_in_recipe add_ingredient">+</button>
+        {ingredients.map((_, index) => (
+          <Ingredient key={"IngredientElement" + index} />
+        ))}
+
+        <button
+          className="add_item_in_recipe add_ingredient"
+          onClick={(_) =>
+            addFieldHandler(_, newRecipeSliceActions.addIngredientField)
+          }
+        >
+          +
+        </button>
       </div>
       <div className="recipe_steps_container">
-        {/* <RecipeStep/> */}
-        {RecipeStepsArray}
+        {recipeSteps.map((_, index) => (
+          <RecipeStep key={"stepElement" + index} />
+        ))}
         <button
           className="add_item_in_recipe add_step"
-          onClick={addStepHandler}
+          onClick={(_) =>
+            addFieldHandler(_, newRecipeSliceActions.addStepFields)
+          }
         >
           +
         </button>
       </div>
       <div className="tags_container">
-        <select>
-          <option>салаты</option>
-          <option>втроые блюда</option>
-        </select>
-        <button className="add_item_in_recipe add_step">+</button>
+        {tagTypes.map((_, index) => (
+          <TagTypes key={"TagTypes" + index} />
+        ))}
+
+        <button
+          className="add_item_in_recipe add_step"
+          onClick={(_) =>
+            addFieldHandler(_, newRecipeSliceActions.addTagTypeField)
+          }
+        >
+          +
+        </button>
         <button>Хочу добавить свой тип</button>
         <input type="text"></input>
       </div>
