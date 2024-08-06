@@ -1,9 +1,12 @@
-const TagTypes: React.FC = () => {
+type TagTypesProps = {
+  value: string;
+};
+const TagTypes: React.FC<TagTypesProps> = (props) => {
   return (
-    <select>
-      <option>салаты</option>
-      <option>втроые блюда</option>
-    </select>
+    <label className="checkbox-btn">
+      <input type="checkbox" name="tagTypes" value={props.value} />
+      <span>{props.value}</span>
+    </label>
   );
 };
 
