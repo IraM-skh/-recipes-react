@@ -1,22 +1,23 @@
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import { DataForDeleteHandler } from "../../pages/CreateRecipePage";
 import { newRecipeSliceActions } from "../../store/slices/newRecipeSlice";
 import ImagePreloader from "./ImagePreloader";
 
 type RecipeStepProps = {
   deleteStepHandler: (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: string
+    data: DataForDeleteHandler
   ) => void;
   id: string;
   imgSrc: string;
 };
 
 const RecipeStep: React.FC<RecipeStepProps> = (props) => {
-  const dispatch = useAppDispatch();
-  const reader = new FileReader();
-
   //JSX
-
+  const dataForDeleteStepHandler = {
+    id: props.id,
+    action: newRecipeSliceActions.removeStep,
+  };
   return (
     <div className="recipe_step">
       <ImagePreloader
@@ -25,8 +26,12 @@ const RecipeStep: React.FC<RecipeStepProps> = (props) => {
         id={props.id}
         imgSrc={props.imgSrc}
       ></ImagePreloader>
-      <input type="text"></input>
-      <button onClick={(_) => props.deleteStepHandler(_, props.id)}>Х</button>
+      <input type="text" name={props.id}></input>
+      <button
+        onClick={(_) => props.deleteStepHandler(_, dataForDeleteStepHandler)}
+      >
+        Х
+      </button>
     </div>
   );
 };

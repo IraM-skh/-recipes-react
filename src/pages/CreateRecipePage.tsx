@@ -2,9 +2,25 @@ import Ingredient from "../components/createRecipe/Ingredient";
 import RecipeStep from "../components/createRecipe/RecipeStep";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { newRecipeSliceActions } from "../store/slices/newRecipeSlice";
-import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
+import {
+  ActionCreatorWithoutPayload,
+  ActionCreatorWithPayload,
+} from "@reduxjs/toolkit";
 import TagTypes from "../components/createRecipe/TagTypes";
 import ImagePreloader from "../components/createRecipe/ImagePreloader";
+import {
+  IRecipesData,
+  RecipeStepType,
+  SpesificRecipe,
+} from "../interfacesAndTypesTs/recipesInterfaces";
+
+export type DataForDeleteHandler = {
+  id: string;
+  action:
+    | ActionCreatorWithPayload<string, "recipesList/removeStep">
+    | ActionCreatorWithPayload<string, "recipesList/removeIngredientField">;
+};
+
 const CreateRecipePage: React.FC = () => {
   //-----types
   type CrateRecipeActions =
@@ -15,6 +31,9 @@ const CreateRecipePage: React.FC = () => {
   type FormInputAndSelectFiedls = {
     recipeTitle: HTMLInputElement;
     tagTypes: HTMLInputElement[];
+    ingredient: RadioNodeList | HTMLInputElement;
+    ingredient_quantity: RadioNodeList | HTMLInputElement;
+    ingredient_measurement: RadioNodeList | HTMLSelectElement;
   };
   type FormStepFiedls = {
     [key: string]: HTMLInputElement;
@@ -24,14 +43,21 @@ const CreateRecipePage: React.FC = () => {
 
   //-----get states and dispatch
   const dispatch = useAppDispatch();
-  const { numberOfIngredientFields, recipeSteps, mainImgSrs, tagTypes } =
+  const { recipeSteps, mainImgSrs, tagTypes, IngredientFieldsId } =
     useAppSelector((state) => state.newRecipe);
 
-  //-----Create arrey for elements render
-  const returnArreyWhithNull = (numberOfElements: number): null[] =>
-    new Array(numberOfElements).fill(null);
-
-  const ingredients = returnArreyWhithNull(numberOfIngredientFields);
+  //-----work with element and node list
+  const getValueOfElementOrNodeList = (
+    element: RadioNodeList | HTMLInputElement | HTMLSelectElement
+  ) => {
+    if (element instanceof RadioNodeList) {
+      return Array.from(
+        element,
+        (el) => (el as HTMLInputElement | HTMLSelectElement).value
+      );
+    }
+    return element.value;
+  };
 
   //-----Handlers
   const addFieldHandler = (
@@ -47,22 +73,54 @@ const CreateRecipePage: React.FC = () => {
     event.preventDefault();
     const form = event.currentTarget;
 
-    const dataFromUser = {
+    //---steps
+    const steps = recipeSteps.map((step): RecipeStepType => {
+      return {
+        imgSrc: step.imgSrc,
+        id: step.id,
+        stepText: form[step.id].value,
+      };
+    });
+    //---ingredients
+    const ingredients = getValueOfElementOrNodeList(form.ingredient);
+    const ingredientQuantities = getValueOfElementOrNodeList(
+      form.ingredient_quantity
+    );
+    const ingredientMeasurements = getValueOfElementOrNodeList(
+      form.ingredient_measurement
+    );
+    //---data
+    const dataFromUser: SpesificRecipe = {
       title: form.recipeTitle.value,
-      tagTypes: [...form.tagTypes]
-        .filter((el) => el.checked)
-        .map((el) => el.value),
+      tags: {
+        type: [...form.tagTypes]
+          .filter((el) => el.checked)
+          .map((el) => el.value),
+      },
+      ingredients: {},
+      steps,
+      mainImgSrs,
     };
-    console.log(dataFromUser.title);
-    console.log(dataFromUser.tagTypes);
+
+    for (let index = 0; index < ingredients.length; index++) {
+      dataFromUser.ingredients[ingredients[index]] = [
+        ingredientQuantities[index],
+        ingredientMeasurements[index],
+      ];
+    }
+
+    //-------ДОБАВИТЬ ОТПРАВКУ НА СЕРВЕР
+    console.log("Это хэндел и он вызван сабмитом????");
+    console.log(dataFromUser);
   };
 
-  const deleteStepHandler = (
+  const deleteFieldHandler = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: string
+    data: DataForDeleteHandler
   ) => {
-    dispatch(newRecipeSliceActions.removeStep(id));
+    dispatch(data.action(data.id));
   };
+
   //-----JSX
   return (
     <form onSubmit={createNewRecipeHandler}>
@@ -84,8 +142,12 @@ const CreateRecipePage: React.FC = () => {
       </div>
 
       <div className="ingredients_container">
-        {ingredients.map((_, index) => (
-          <Ingredient key={"IngredientElement" + index} />
+        {IngredientFieldsId.map((id, index) => (
+          <Ingredient
+            key={id}
+            id={id}
+            deleteIngredientFieldHandler={deleteFieldHandler}
+          />
         ))}
 
         <button
@@ -93,6 +155,7 @@ const CreateRecipePage: React.FC = () => {
           onClick={(_) =>
             addFieldHandler(_, newRecipeSliceActions.addIngredientField)
           }
+          type="button"
         >
           +
         </button>
@@ -103,12 +166,13 @@ const CreateRecipePage: React.FC = () => {
             key={step.id}
             id={step.id}
             imgSrc={step.imgSrc}
-            deleteStepHandler={deleteStepHandler}
+            deleteStepHandler={deleteFieldHandler}
           />
         ))}
         <button
           className="add_item_in_recipe add_step"
           onClick={(_) => addFieldHandler(_, newRecipeSliceActions.addStep)}
+          type="button"
         >
           +
         </button>
@@ -123,6 +187,7 @@ const CreateRecipePage: React.FC = () => {
           onClick={(_) =>
             addFieldHandler(_, newRecipeSliceActions.addTagTypeField)
           }
+          type="button"
         >
           +
         </button>

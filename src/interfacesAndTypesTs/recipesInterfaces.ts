@@ -1,3 +1,7 @@
+//recipes in menu list
+
+import { ImageSrc } from "../store/slices/newRecipeSlice";
+
 export interface IRecipesData {
   title: string;
   imgUrl: string;
@@ -15,3 +19,15 @@ type Tags = {
 };
 
 export type Recipes = Array<IRecipesData>;
+
+//spesific recipe
+export type RecipeStepType = ImageSrc & {
+  stepText: string;
+};
+export type SpesificRecipe = {
+  title: string;
+  tags: Tags;
+  ingredients: ingredients;
+  steps: RecipeStepType[];
+  mainImgSrs: ImageSrc;
+};

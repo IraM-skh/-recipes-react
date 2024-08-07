@@ -1,9 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const generateId = (array: ImageSrc[], nameOfArray: string): string => {
+const generateId = (
+  array: ImageSrc[] | string[],
+  nameOfArray: string
+): string => {
   const id = nameOfArray + Math.random().toString() + Math.random().toString();
-  const dubledId = array.find((el) => el.id === id);
+  let dubledId = undefined;
+  if (typeof array[0] === "string") {
+    dubledId = (array as string[]).find((el) => el === id);
+  } else {
+    dubledId = (array as ImageSrc[]).find((el) => el.id === id);
+  }
+
   if (dubledId !== undefined) {
     generateId(array, nameOfArray);
   }
@@ -18,8 +27,7 @@ export type ImageSrc = {
 export type NewRecipeSlice = {
   recipeSteps: ImageSrc[];
   mainImgSrs: ImageSrc;
-  numberOfIngredientFields: number;
-
+  IngredientFieldsId: string[];
   message: string | null;
   imgFile: any;
   tagTypes: string[];
@@ -32,9 +40,9 @@ const initialState: NewRecipeSlice = {
       id: "recipeSteps" + Math.random().toString() + Math.random().toString(),
     },
   ],
-
-  numberOfIngredientFields: 1,
-
+  IngredientFieldsId: [
+    "ingredientId" + Math.random().toString() + Math.random().toString(),
+  ],
   message: null,
   imgFile: "",
   mainImgSrs: { id: "mainImg", imgSrc: "" },
@@ -56,6 +64,17 @@ const newRecipeSlice = createSlice({
         (step) => step.id !== action.payload
       );
     },
+    addIngredientField(state) {
+      state.IngredientFieldsId.push(
+        generateId(state.IngredientFieldsId, "ingredientId")
+      );
+    },
+    removeIngredientField(state, action: PayloadAction<string>) {
+      state.IngredientFieldsId = state.IngredientFieldsId.filter(
+        (idField) => idField !== action.payload
+      );
+    },
+
     setStepSrc(state, action: PayloadAction<ImageSrc>) {
       const step = state.recipeSteps.find(
         (step) => step.id === action.payload.id
@@ -67,9 +86,7 @@ const newRecipeSlice = createSlice({
     setMainImgSrs(state, action: PayloadAction<ImageSrc>) {
       state.mainImgSrs.imgSrc = action.payload.imgSrc;
     },
-    addIngredientField(state) {
-      state.numberOfIngredientFields++;
-    },
+
     addTagTypeField(state) {},
     setImage(state, action) {
       state.imgFile = action.payload;
