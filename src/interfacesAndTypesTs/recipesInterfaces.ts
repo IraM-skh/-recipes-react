@@ -13,7 +13,7 @@ export interface IRecipesData {
 type ingredients = {
   [key: string]: [number | string, string?];
 };
-type Tags = {
+export type Tags = {
   type: string[];
   diet?: string[];
 };

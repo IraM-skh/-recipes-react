@@ -86,8 +86,6 @@ const newRecipeSlice = createSlice({
     setMainImgSrs(state, action: PayloadAction<ImageSrc>) {
       state.mainImgSrs.imgSrc = action.payload.imgSrc;
     },
-
-    addTagTypeField(state) {},
     setImage(state, action) {
       state.imgFile = action.payload;
     },

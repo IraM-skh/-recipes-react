@@ -13,6 +13,8 @@ import {
   RecipeStepType,
   SpesificRecipe,
 } from "../interfacesAndTypesTs/recipesInterfaces";
+import { useEffect } from "react";
+import { getTagsData } from "../store/slices/recipesDetailsSlice";
 
 export type DataForDeleteHandler = {
   id: string;
@@ -22,6 +24,9 @@ export type DataForDeleteHandler = {
 };
 
 const CreateRecipePage: React.FC = () => {
+  useEffect(() => {
+    dispatch(getTagsData());
+  }, []);
   //-----types
   type CrateRecipeActions =
     | ActionCreatorWithoutPayload<"recipesList/addIngredientField">
@@ -43,9 +48,11 @@ const CreateRecipePage: React.FC = () => {
 
   //-----get states and dispatch
   const dispatch = useAppDispatch();
-  const { recipeSteps, mainImgSrs, tagTypes, IngredientFieldsId } =
-    useAppSelector((state) => state.newRecipe);
-
+  const { recipeSteps, mainImgSrs, IngredientFieldsId } = useAppSelector(
+    (state) => state.newRecipe
+  );
+  const { tags } = useAppSelector((state) => state.recipesDetails);
+  const tagTypes = tags.tags?.type;
   //-----work with element and node list
   const getValueOfElementOrNodeList = (
     element: RadioNodeList | HTMLInputElement | HTMLSelectElement
@@ -110,7 +117,6 @@ const CreateRecipePage: React.FC = () => {
     }
 
     //-------ДОБАВИТЬ ОТПРАВКУ НА СЕРВЕР
-    console.log("Это хэндел и он вызван сабмитом????");
     console.log(dataFromUser);
   };
 
@@ -178,20 +184,10 @@ const CreateRecipePage: React.FC = () => {
         </button>
       </div>
       <div className="tags_container">
-        {tagTypes.map((tag, index) => (
-          <TagTypes key={"TagTypes" + index} value={tag} />
-        ))}
-
-        <button
-          className="add_item_in_recipe add_step"
-          onClick={(_) =>
-            addFieldHandler(_, newRecipeSliceActions.addTagTypeField)
-          }
-          type="button"
-        >
-          +
-        </button>
-        <button>Хочу добавить свой тип</button>
+        {tagTypes &&
+          tagTypes.map((tag: string, index: number) => (
+            <TagTypes key={"TagTypes" + index} value={tag} />
+          ))}
         <input type="text"></input>
       </div>
       <button type="submit">Отправть форму</button>

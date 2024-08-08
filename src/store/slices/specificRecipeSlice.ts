@@ -4,7 +4,6 @@ import { getHttp } from "../../dataFromServer/httpRequest";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IRecipesData } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { Comment, Comments } from "../../interfacesAndTypesTs/comments";
-import { useAppDispatch } from "../../hooks";
 
 //AsyncThunk load recipe
 export const getRecipeData = createAsyncThunk<

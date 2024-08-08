@@ -3,12 +3,14 @@ import fetchStatusSlice from "./slices/fetchStatusSlice";
 import recipesListSlice from "./slices/recipesListSlice";
 import specificRecipeSlice from "./slices/specificRecipeSlice";
 import newRecipeSlice from "./slices/newRecipeSlice";
+import recipesDetailsSlice from "./slices/recipesDetailsSlice";
 const store = configureStore({
   reducer: {
     status: fetchStatusSlice,
     recipesList: recipesListSlice,
     specificRecipe: specificRecipeSlice,
     newRecipe: newRecipeSlice,
+    recipesDetails: recipesDetailsSlice,
   },
 });
 
