@@ -1,5 +1,6 @@
 import { DataForDeleteHandler } from "../../pages/CreateRecipePage";
 import { newRecipeSliceActions } from "../../store/slices/newRecipeSlice";
+import styles from "../../pages/CreateRecipePage.module.css";
 
 type IngredientProps = {
   deleteIngredientFieldHandler: (
@@ -14,8 +15,9 @@ const Ingredient: React.FC<IngredientProps> = (props) => {
     id: props.id,
     action: newRecipeSliceActions.removeIngredientField,
   };
+
   return (
-    <div className="ingredient">
+    <div className={styles.ingredient}>
       <input type="text" placeholder="ингредиент" name="ingredient"></input>
       <input
         type="text"
@@ -32,7 +34,7 @@ const Ingredient: React.FC<IngredientProps> = (props) => {
           props.deleteIngredientFieldHandler(_, dataForDeleteHandler)
         }
       >
-        Х
+        x
       </button>
     </div>
   );

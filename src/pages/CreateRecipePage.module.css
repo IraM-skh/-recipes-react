@@ -1,0 +1,157 @@
+.create_recipe input[type="text"] {
+  font: inherit;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 20rem;
+  max-width: 100%;
+  padding: 0.5%;
+}
+
+.file_uploader {
+  display: none;
+}
+
+.file_uploader__custom_button {
+  display: block;
+  margin: 0 auto 3% auto;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5%;
+  text-align: center;
+  max-width: 60%;
+}
+
+.image_preloader {
+  border: 1px dotted #ccc;
+  border-radius: 5px;
+  padding: 0.5%;
+}
+.image_preloader__img_container {
+  width: 300px;
+  height: 300px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.image_preloader svg {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+  align-self: center;
+}
+.image_preloader p {
+  text-align: center;
+  color: #888888;
+  font-weight: 500;
+}
+.image_preloader img {
+  width: 100%;
+  object-fit: cover;
+}
+.add_item_in_recipe {
+  display: block;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0.5%;
+  margin: 0 auto;
+}
+.description_container {
+  display: flex;
+  column-gap: 2%;
+}
+.description_container input[type="text"] {
+  width: 100%;
+}
+
+.recipe_step {
+  display: flex;
+  column-gap: 2%;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.recipe_steps_container {
+}
+
+.recipe_step input[type="text"] {
+  width: 100%;
+}
+
+.recipe_step button,
+.ingredient button {
+  cursor: pointer;
+  align-self: center;
+  color: rgb(255, 0, 119);
+  border: 2px solid #ccc;
+  text-shadow: 0px 0px 4px rgba(255, 0, 119, 0.401);
+  border-radius: 5px;
+  padding: 1%;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 30px;
+  line-height: 55%;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ingredient {
+  display: flex;
+  column-gap: 2%;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.ingredient button {
+  margin-left: auto;
+}
+
+.recipe_step,
+.ingredient {
+  border-bottom: 2px solid #ccc;
+}
+
+.recipe_step:last-of-type,
+.ingredient:last-of-type {
+  border-bottom: none;
+}
+.tag_types_container {
+  display: flex;
+  column-gap: 2%;
+}
+input[type="checkbox"] {
+  display: none;
+}
+.custom_checkbox {
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+
+  align-items: center;
+
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5rem 1rem;
+}
+input[type="checkbox"]:checked + .custom_checkbox {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.checkbox_label {
+  display: flex;
+  box-sizing: border-box;
+}
+
+button[type="submit"] {
+  display: block;
+  margin: 3% auto;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 1%;
+  text-align: center;
+}

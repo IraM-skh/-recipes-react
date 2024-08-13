@@ -9,12 +9,12 @@ import {
 import TagTypes from "../components/createRecipe/TagTypes";
 import ImagePreloader from "../components/createRecipe/ImagePreloader";
 import {
-  IRecipesData,
   RecipeStepType,
   SpesificRecipe,
 } from "../interfacesAndTypesTs/recipesInterfaces";
 import { useEffect } from "react";
 import { getTagsData } from "../store/slices/recipesDetailsSlice";
+import styles from "./CreateRecipePage.module.css";
 
 export type DataForDeleteHandler = {
   id: string;
@@ -129,69 +129,76 @@ const CreateRecipePage: React.FC = () => {
 
   //-----JSX
   return (
-    <form onSubmit={createNewRecipeHandler}>
-      <input
-        placeholder="Название рецепта"
-        type="text"
-        name="recipeTitle"
-      ></input>
-      <div>
-        <label htmlFor="prev_main_picture_input">
-          Загрузите изображение рецепта
-        </label>
-        <ImagePreloader
-          id={mainImgSrs.id}
-          action={newRecipeSliceActions.setMainImgSrs}
-          imgSrc={mainImgSrs.imgSrc}
-          inputName="prev_main_picture_input"
-        />
-      </div>
-
-      <div className="ingredients_container">
-        {IngredientFieldsId.map((id, index) => (
-          <Ingredient
-            key={id}
-            id={id}
-            deleteIngredientFieldHandler={deleteFieldHandler}
+    <section className={styles.create_recipe}>
+      <form onSubmit={createNewRecipeHandler}>
+        <h3>Название рецепта</h3>
+        <input
+          placeholder="Название рецепта"
+          type="text"
+          name="recipeTitle"
+        ></input>
+        <h3>Главное фото и описание рецепта</h3>
+        <div className={styles.description_container}>
+          <ImagePreloader
+            id={mainImgSrs.id}
+            action={newRecipeSliceActions.setMainImgSrs}
+            imgSrc={mainImgSrs.imgSrc}
+            inputName="prev_main_picture_input"
           />
-        ))}
 
-        <button
-          className="add_item_in_recipe add_ingredient"
-          onClick={(_) =>
-            addFieldHandler(_, newRecipeSliceActions.addIngredientField)
-          }
-          type="button"
-        >
-          +
-        </button>
-      </div>
-      <div className="recipe_steps_container">
-        {recipeSteps.map((step) => (
-          <RecipeStep
-            key={step.id}
-            id={step.id}
-            imgSrc={step.imgSrc}
-            deleteStepHandler={deleteFieldHandler}
-          />
-        ))}
-        <button
-          className="add_item_in_recipe add_step"
-          onClick={(_) => addFieldHandler(_, newRecipeSliceActions.addStep)}
-          type="button"
-        >
-          +
-        </button>
-      </div>
-      <div className="tags_container">
-        {tagTypes &&
-          tagTypes.map((tag: string, index: number) => (
-            <TagTypes key={"TagTypes" + index} value={tag} />
+          <input type="text"></input>
+        </div>
+        <h3>Ингредиенты</h3>
+        <div className="ingredients_container">
+          {IngredientFieldsId.map((id, index) => (
+            <Ingredient
+              key={id}
+              id={id}
+              deleteIngredientFieldHandler={deleteFieldHandler}
+            />
           ))}
-        <input type="text"></input>
-      </div>
-      <button type="submit">Отправть форму</button>
-    </form>
+
+          <button
+            className={styles.add_item_in_recipe + " add_ingredient"}
+            onClick={(_) =>
+              addFieldHandler(_, newRecipeSliceActions.addIngredientField)
+            }
+            type="button"
+          >
+            Добавить ингредиент
+          </button>
+        </div>
+        <h3>Шаги рецепта</h3>
+        <div className={styles.recipe_steps_container}>
+          {recipeSteps.map((step) => (
+            <RecipeStep
+              key={step.id}
+              id={step.id}
+              imgSrc={step.imgSrc}
+              deleteStepHandler={deleteFieldHandler}
+            />
+          ))}
+
+          <button
+            className={styles.add_item_in_recipe + " add_step"}
+            onClick={(_) => addFieldHandler(_, newRecipeSliceActions.addStep)}
+            type="button"
+          >
+            Добавить шаг
+          </button>
+        </div>
+        <h3>Тэги рецепта</h3>
+        <div className="tags_container">
+          <div className={styles.tag_types_container}>
+            {tagTypes &&
+              tagTypes.map((tag: string, index: number) => (
+                <TagTypes key={"TagTypes" + index} value={tag} />
+              ))}
+          </div>
+        </div>
+        <button type="submit">Добавить рецепт</button>
+      </form>
+    </section>
   );
 };
 

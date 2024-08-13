@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { DataForDeleteHandler } from "../../pages/CreateRecipePage";
 import { newRecipeSliceActions } from "../../store/slices/newRecipeSlice";
 import ImagePreloader from "./ImagePreloader";
+import styles from "../../pages/CreateRecipePage.module.css";
 
 type RecipeStepProps = {
   deleteStepHandler: (
@@ -19,7 +20,7 @@ const RecipeStep: React.FC<RecipeStepProps> = (props) => {
     action: newRecipeSliceActions.removeStep,
   };
   return (
-    <div className="recipe_step">
+    <div className={styles.recipe_step}>
       <ImagePreloader
         inputName="recipe_step_img"
         action={newRecipeSliceActions.setStepSrc}
@@ -30,7 +31,7 @@ const RecipeStep: React.FC<RecipeStepProps> = (props) => {
       <button
         onClick={(_) => props.deleteStepHandler(_, dataForDeleteStepHandler)}
       >
-        Х
+        x
       </button>
     </div>
   );
