@@ -1,6 +1,8 @@
 import React from "react";
 import { IRecipesData } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { Link } from "react-router-dom";
+import styles from "../../pages/RecipesPage.module.css";
+
 interface IRecipeCardProps {
   recipe: IRecipesData;
 }
@@ -11,7 +13,6 @@ const onlyFirstLatterToUpperCase = (string: string): string => {
 const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
   const recipe = props.recipe;
   //ingredientsList
-  console.log(recipe.ingredients);
   const ingredients = Object.keys(recipe.ingredients);
   const ingredientsList = onlyFirstLatterToUpperCase(ingredients.join(", "));
 
@@ -25,16 +26,18 @@ const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
   }
 
   return (
-    <div className="recipe_card">
+    <div className={styles.recipe_card}>
       <Link to={`/recipe/${recipe.id}`}>
         <h3>{recipe.title}</h3>
       </Link>
-
-      <img src={recipe.imgUrl} alt={recipe.title}></img>
-      <p className="ingredients_list">{ingredientsList}</p>
-      <p className="tags_type_list">Тип блюда: {tagsTypeList}</p>
+      <div className={styles.description_container}>
+        <img src={recipe.imgUrl} alt={recipe.title}></img>
+        <p>Какое-то описание рецепта</p>
+      </div>
+      <p className={styles.ingredients_list}>Ингредиенты: {ingredientsList}</p>
+      <p className={styles.tags_type_list}>Тип блюда: {tagsTypeList}</p>
       {isExistDietTags && (
-        <p className="tags_diet_list">Тэги диеты: {tagsDietList}</p>
+        <p className={styles.tags_diet_list}>Тэги диеты: {tagsDietList}</p>
       )}
     </div>
   );

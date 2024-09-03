@@ -5,7 +5,7 @@ import {
   specificRecipeSliceActions,
 } from "../../store/slices/specificRecipeSlice";
 import { useSelector } from "react-redux";
-
+import styles from "./../../pages/RecipePage.module.css";
 type CommentsListProps = {
   recipeId: string;
 };
@@ -25,14 +25,18 @@ const CommentsList: React.FC<CommentsListProps> = (props) => {
   }, [isAddNewComment, props.recipeId]);
   const commentsList = useAppSelector((state) => state.specificRecipe.comments);
   return (
-    <div className="comments_list_container">
+    <div className={styles.comments_list_container}>
       {commentsList.map((comment) => {
         return (
-          <div key={"comment" + comment.id} className="comment_container">
-            <p className="name_and_date_comment">
-              <span>{comment.autor}</span> <span>{comment.date}</span>
+          <div
+            key={"comment" + comment.id}
+            className={styles.comment_container}
+          >
+            <p className={styles.name_and_date_comment}>
+              <span>{comment.autor}</span>{" "}
+              <span className={styles.date_comment}>{comment.date}</span>
             </p>
-            <p className="text_comment">{comment.text}</p>
+            <p className={styles.text_comment}>{comment.text}</p>
           </div>
         );
       })}

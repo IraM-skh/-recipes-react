@@ -1,0 +1,40 @@
+.recipe_card {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.306);
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+.recipe_card img {
+  max-width: 300px;
+  border-radius: 5px;
+}
+
+.recipe_card h3 {
+  color: black;
+  margin-top: 0;
+}
+.recipe_card a {
+  text-decoration: none;
+}
+
+.description_container {
+  display: flex;
+  column-gap: 1rem;
+  align-items: center;
+}
+
+.description_container p {
+  margin: 0;
+}
+
+.ingredients_list,
+.tags_type_list,
+.tags_diet_list {
+  padding: 0.7rem;
+  border-radius: 5px;
+  background-color: rgba(255, 228, 196, 0.249);
+}
+
+.tag_diet_container {
+  margin-top: 1rem;
+}

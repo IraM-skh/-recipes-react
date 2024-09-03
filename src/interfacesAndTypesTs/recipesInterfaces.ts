@@ -8,6 +8,10 @@ export interface IRecipesData {
   ingredients: ingredients;
   tags: Tags;
   id: string;
+  steps?: Array<{
+    src: string;
+    stepsDescription: string;
+  }>;
 }
 
 type ingredients = {

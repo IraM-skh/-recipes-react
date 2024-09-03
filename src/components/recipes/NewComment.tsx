@@ -5,6 +5,7 @@ import {
   getRecipeCooments,
   sendRecipeCooment,
 } from "../../store/slices/specificRecipeSlice";
+import styles from "../../pages/RecipePage.module.css";
 
 type NewCommentProps = {
   recipeId: string;
@@ -62,12 +63,12 @@ const NewComment: React.FC<NewCommentProps> = (props) => {
   return (
     //добавить загрузку изображения
     <form onSubmit={submitFormNewCommentHandler}>
-      <div className="name_form_comment">
+      <div className={styles.name_form_comment}>
         <label htmlFor="name">Ваше имя:</label>
         <input type="text" id="name" ref={nameNewComment} required />
       </div>
-      <div className="text_form_comment">
-        <label htmlFor="text">Text</label>
+      <div className={styles.text_form_comment}>
+        <label htmlFor="text">Ваш комментарий:</label>
         <textarea id="text" ref={nameTextComment} required></textarea>
       </div>
       <button type="submit">Отправить</button>

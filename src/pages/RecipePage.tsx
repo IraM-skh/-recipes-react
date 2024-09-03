@@ -4,17 +4,30 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import { getRecipeData } from "../store/slices/specificRecipeSlice";
 import CommentsList from "../components/recipes/CommentsList";
 import NewComment from "../components/recipes/NewComment";
+import styles from "./RecipePage.module.css";
+import { Link } from "react-router-dom";
 
-const tagRender = (tags: string[]) =>
-  tags.map((tag, index) => {
-    //добавить переадрессацию на страницу с включенными фильтрами
-    return <a key={tag + index}>{tag}</a>;
+const tagRender = (tags: string[], tagsType: string) => {
+  return tags.map((tag, index) => {
+    let searchParams = "";
+    if (tagsType === "type") {
+      searchParams = `sortTypes=${tag}&sortDiet=`;
+    }
+    if (tagsType === "diet") {
+      searchParams = `sortTypes=undefined&sortDiet=${tag}`;
+    }
+    return (
+      <Link key={tag + index} to={`/recipes?${searchParams}`}>
+        {tag}
+      </Link>
+    );
   });
+};
 
 const RecipePage: React.FC = () => {
   const { recipeId } = useParams<{ recipeId?: string }>();
   const dispatch = useAppDispatch();
-  let isAddNewComment = false;
+  // let isAddNewComment = false;
   useEffect(() => {
     if (typeof recipeId === "string") {
       dispatch(getRecipeData(recipeId));
@@ -31,31 +44,46 @@ const RecipePage: React.FC = () => {
     return (
       <Fragment>
         <div className="recipe_container">
-          <h3>{recipe.title}</h3>
-          <div className="tags_type tags_type">{tagRender(tagsType)}</div>
+          <h3 className={styles.recipe_title}>{recipe.title}</h3>
+          <div className={styles.tags_type + " tags_type"}>
+            {tagRender(tagsType, "type")}
+          </div>
           {tagsDiet && (
-            <div className="tags_type tags_diet">{tagRender(tagsDiet)}</div>
+            <div className={styles.tags_type + " tags_diet"}>
+              {tagRender(tagsDiet, "diet")}
+            </div>
           )}
 
           <img src={recipe.imgUrl} alt={recipe.title}></img>
-          <ul className="ingredients_list">
+          <h3>Ингредиенты</h3>
+          <ul className={styles.ingredients_list}>
             {ingredients.map((ingridient, index) => {
               return (
-                <div key={ingridient[0] + index}>
-                  <span className="ingridient">{ingridient[0]}</span>
+                <li key={ingridient[0] + index}>
+                  <span className={styles.ingridient}>{ingridient[0]}</span>
                   <span> </span>
-                  <span className="ingridient_quantity">
+                  <span className={styles.ingridient_quantity}>
                     {ingridient[1].join(" ")}
                   </span>
-                </div>
+                </li>
               );
             })}
           </ul>
+          <h3>Шаги рецепта</h3>
           <div className="recipe_steps_container">
-            <p>ДОБАВИТЬ ШАГИ РЕЦЕПТА</p>
+            {recipe.steps &&
+              recipe.steps.map((step) => {
+                return (
+                  <div className={styles.recipe_step}>
+                    <img src={step.src}></img>
+                    <p>{step.stepsDescription}</p>
+                  </div>
+                );
+              })}
           </div>
         </div>
-        <div className="comments_container">
+        <h3>Комментарии</h3>
+        <div className={styles.comments_container}>
           <CommentsList recipeId={recipeId}></CommentsList>
 
           <NewComment recipeId={recipeId}></NewComment>
