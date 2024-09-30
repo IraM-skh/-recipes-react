@@ -37,7 +37,8 @@ const RecipePage: React.FC = () => {
   const recipe = specificRecipeData.recipe;
 
   if (recipe !== null && typeof recipeId === "string") {
-    const ingredients = Object.entries(recipe.ingredients);
+    const ingredients = recipe.ingredients;
+    console.log(recipe);
     const tagsType = recipe.tags.type;
     const tagsDiet = recipe.tags.diet;
 
@@ -57,13 +58,15 @@ const RecipePage: React.FC = () => {
           <img src={recipe.imgUrl} alt={recipe.title}></img>
           <h3>Ингредиенты</h3>
           <ul className={styles.ingredients_list}>
-            {ingredients.map((ingridient, index) => {
+            {ingredients.map((ingridientObj, index) => {
               return (
-                <li key={ingridient[0] + index}>
-                  <span className={styles.ingridient}>{ingridient[0]}</span>
+                <li key={Object.keys(ingridientObj)[0] + index}>
+                  <span className={styles.ingridient}>
+                    {Object.keys(ingridientObj)[0]}
+                  </span>
                   <span> </span>
                   <span className={styles.ingridient_quantity}>
-                    {ingridient[1].join(" ")}
+                    {ingridientObj[Object.keys(ingridientObj)[0]].join(" ")}
                   </span>
                 </li>
               );

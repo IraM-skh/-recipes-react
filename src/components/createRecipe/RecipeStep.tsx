@@ -22,7 +22,7 @@ const RecipeStep: React.FC<RecipeStepProps> = (props) => {
   return (
     <div className={styles.recipe_step}>
       <ImagePreloader
-        inputName="recipe_step_img"
+        inputName={`recipe_step_img[${props.id}]`}
         action={newRecipeSliceActions.setStepSrc}
         id={props.id}
         imgSrc={props.imgSrc}

@@ -15,7 +15,6 @@ const fetchStatusSlice = createSlice({
   initialState,
   reducers: {
     showStatusMessage(state, action: PayloadAction<FetchStatus>) {
-      console.log(action.payload, "выавыаовылавлыоавоыл");
       state.status = action.payload.status;
       state.message = action.payload.message;
     },

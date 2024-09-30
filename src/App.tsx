@@ -9,6 +9,7 @@ import PersonalAccountPage from "./pages/PersonalAccountPage";
 import CreateRecipePage from "./pages/CreateRecipePage";
 import RecipePage from "./pages/RecipePage";
 
+export const nameFolderOnServer: string = "dietRecipes";
 function App() {
   return (
     <Fragment>

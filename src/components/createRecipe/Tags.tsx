@@ -1,14 +1,15 @@
 import styles from "../../pages/CreateRecipePage.module.css";
-type TagTypesProps = {
+type TagsProps = {
   value: string;
+  inputName: string;
 };
-const TagTypes: React.FC<TagTypesProps> = (props) => {
+const Tags: React.FC<TagsProps> = (props) => {
   return (
     <label className={styles.checkbox_label}>
-      <input type="checkbox" name="tagTypes" value={props.value} />
+      <input type="checkbox" name={props.inputName} value={props.value} />
       <span className={styles.custom_checkbox}>{props.value}</span>
     </label>
   );
 };
 
-export default TagTypes;
+export default Tags;

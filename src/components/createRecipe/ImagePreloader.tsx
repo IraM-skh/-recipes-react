@@ -11,8 +11,8 @@ type ImagePreloaderProps = {
   inputName: string;
   id: string;
   action:
-    | ActionCreatorWithPayload<ImageSrc, "recipesList/setStepSrc">
-    | ActionCreatorWithPayload<ImageSrc, "recipesList/setMainImgSrs">;
+    | ActionCreatorWithPayload<ImageSrc, "newRecipe/setStepSrc">
+    | ActionCreatorWithPayload<ImageSrc, "newRecipe/setMainImgSrs">;
   imgSrc: string;
 };
 type src = {

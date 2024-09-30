@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FetchStatus } from "./fetchStatusSlice";
-import { getHttp } from "../../dataFromServer/httpRequest";
+import { getHttp, postHttp } from "../../dataFromServer/httpRequest";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IRecipesData } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { Comment, Comments } from "../../interfacesAndTypesTs/comments";
+import { nameFolderOnServer } from "../../App";
 
 //AsyncThunk load recipe
 export const getRecipeData = createAsyncThunk<
@@ -12,14 +13,19 @@ export const getRecipeData = createAsyncThunk<
   { rejectValue: string }
 >("specificRecipe/getRecipeData", async (srcRecipesId, { rejectWithValue }) => {
   try {
-    let recipesData = await getHttp(
-      `https://recipes-7e232-default-rtdb.firebaseio.com/Recipes/${srcRecipesId}.json`
-    );
+    const url = `../${nameFolderOnServer}/php/getOneRecipe.php`;
+    let recipesData = await postHttp(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify(srcRecipesId),
+    });
     if (recipesData === null) {
       recipesData = [];
     }
 
-    return recipesData;
+    return recipesData[0];
   } catch {
     return rejectWithValue(
       "Ошибка згрузки рецепта. Попробуйте обновить страницу."
@@ -33,15 +39,21 @@ export const getRecipeCooments = createAsyncThunk<
   { rejectValue: string }
 >("specificRecipe/getRecipeCooments", async (idRecipe, { rejectWithValue }) => {
   try {
-    let commentsData = await getHttp(
-      `https://recipes-7e232-default-rtdb.firebaseio.com/Comments/${idRecipe}.json`
+    let commentsData = await postHttp(
+      `../${nameFolderOnServer}/php/getComments.php`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify(idRecipe),
+      }
     );
     if (commentsData === null) {
       commentsData = [];
     }
 
     commentsData = Object.values(commentsData);
-    console.log(commentsData, "загрузка данных о комментах");
     return commentsData;
   } catch {
     return rejectWithValue(
@@ -49,7 +61,7 @@ export const getRecipeCooments = createAsyncThunk<
     );
   }
 });
-
+//ПОПРАВИТЬ sendRecipeCООment
 export const sendRecipeCooment = createAsyncThunk<
   string,
   Comment,
@@ -58,20 +70,17 @@ export const sendRecipeCooment = createAsyncThunk<
   "specificRecipe/sendRecipeCooment",
   async (commentData, { rejectWithValue }) => {
     try {
-      await fetch(
-        `https://recipes-7e232-default-rtdb.firebaseio.com/Comments/${commentData.idRecipe}.json`,
-        {
-          method: "POST",
-          body: JSON.stringify(commentData),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await fetch(`../${nameFolderOnServer}/php/setNewComment.php`, {
+        method: "POST",
+        body: JSON.stringify(commentData),
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      });
       return commentData.idRecipe;
     } catch {
       return rejectWithValue(
-        "Ошибка отправки комментария. Попробуйте обновить страницу."
+        "Ошибка отправки комментария. Попробуйте еще раз или обновите страницу."
       );
     }
   }

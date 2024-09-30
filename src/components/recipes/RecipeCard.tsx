@@ -13,7 +13,10 @@ const onlyFirstLatterToUpperCase = (string: string): string => {
 const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
   const recipe = props.recipe;
   //ingredientsList
-  const ingredients = Object.keys(recipe.ingredients);
+  console.log(recipe);
+  const ingredients = recipe.ingredients.map((el) => {
+    return Object.keys(el)[0];
+  });
   const ingredientsList = onlyFirstLatterToUpperCase(ingredients.join(", "));
 
   //tags type

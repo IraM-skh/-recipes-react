@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FetchStatus } from "./fetchStatusSlice";
-import { getHttp } from "../../dataFromServer/httpRequest";
+import { getHttp, postHttp } from "../../dataFromServer/httpRequest";
 import { Recipes } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { nameFolderOnServer } from "../../App";
 
 //AsyncThunk
 export const getRecipesData = createAsyncThunk<
@@ -12,7 +13,7 @@ export const getRecipesData = createAsyncThunk<
 >("recipesList/getRecipesData", async (_, { rejectWithValue }) => {
   try {
     let recipesData = await getHttp(
-      "https://recipes-7e232-default-rtdb.firebaseio.com/Recipes.json"
+      `../${nameFolderOnServer}/php/getRecipesList.php`
     );
     if (recipesData === null) {
       recipesData = [];

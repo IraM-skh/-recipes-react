@@ -25,9 +25,10 @@ const Ingredient: React.FC<IngredientProps> = (props) => {
         name="ingredient_quantity"
       ></input>
       <select name="ingredient_measurement">
-        <option>гр.</option>
-        <option>ч.л.</option>
-        <option>кг.</option>
+        <option value="гр.">гр.</option>
+        <option value="ч.л.">ч.л.</option>
+        <option value="кг.">кг.</option>
+        <option value="по вкусу">по вкусу</option>
       </select>
       <button
         onClick={(_) =>

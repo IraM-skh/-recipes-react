@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getHttp } from "../../dataFromServer/httpRequest";
 import { Tags } from "../../interfacesAndTypesTs/recipesInterfaces";
+import { nameFolderOnServer } from "../../App";
 
 //Async load types
 export const getTagsData = createAsyncThunk<
@@ -10,7 +11,7 @@ export const getTagsData = createAsyncThunk<
 >("recipesDetails/getTagsData", async (_, { rejectWithValue }) => {
   try {
     let tagsData = await getHttp(
-      `https://recipes-7e232-default-rtdb.firebaseio.com/tags.json`
+      `../${nameFolderOnServer}/php/getTagsData.php`
     );
 
     if (tagsData === null) {

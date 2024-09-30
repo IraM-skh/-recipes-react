@@ -1,7 +1,14 @@
 import { useState } from "react";
 import InputForLoginForm from "./InputForLoginForm";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import {
+  sendRegistration,
+  login as sendLogin,
+  getIsUserLoggedIn,
+} from "../../store/slices/loginDataSlice";
 
 const NotLoggedIn: React.FC = () => {
+  const dispatch = useAppDispatch();
   //-----types
   type inputsInForm = {
     login: HTMLInputElement;
@@ -15,6 +22,12 @@ const NotLoggedIn: React.FC = () => {
   const [isFormFilled, setIsFormFilled] = useState(true);
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const {
+    errorLogin,
+    errorRegistrationLogin,
+    errorRegistrationEMail,
+    loadingError,
+  } = useAppSelector((state) => state.userData);
   //-----handlers
   const switchLoginOrRegistrationHandler: React.MouseEventHandler<
     HTMLButtonElement
@@ -24,7 +37,7 @@ const NotLoggedIn: React.FC = () => {
 
   const loginFormSubmitHandler: React.FormEventHandler<
     HTMLFormElement & inputsInForm
-  > = (event) => {
+  > = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
 
@@ -41,7 +54,7 @@ const NotLoggedIn: React.FC = () => {
     const eMail = eMailInput?.value.trim();
     const password = passwordInput.value.trim();
     const repeatPassword = repeatPasswordInput?.value.trim();
-    const isRememberUser = rememberInput.checked;
+    const remember = rememberInput.checked;
 
     if (isAccountExist) {
       if (login && password) {
@@ -52,13 +65,19 @@ const NotLoggedIn: React.FC = () => {
         setFormErrorMessage(() => "Заполните все поля");
         return;
       }
-      //Отправка данных на сервер
-      console.log(login, password, isRememberUser);
-      localStorage.setItem("login", login);
+
+      //ЛОГИН
+      await dispatch(sendLogin({ login, password, remember }));
+      dispatch(getIsUserLoggedIn());
       return;
     }
 
     if (!isAccountExist) {
+      if (password !== repeatPassword) {
+        setIsFormFilled(() => false);
+        setFormErrorMessage(() => "Пароли не совпадают");
+        return;
+      }
       if (login && eMail && password && repeatPassword) {
         setIsFormFilled(() => true);
         setFormErrorMessage(() => "");
@@ -67,9 +86,9 @@ const NotLoggedIn: React.FC = () => {
         setFormErrorMessage(() => "Заполните все поля");
         return;
       }
-      //Отправка данных на сервер
-      localStorage.setItem("login", login);
-      console.log(login, eMail, password, isRememberUser);
+      //РЕГИСТРАЦИЯ
+      await dispatch(sendRegistration({ login, eMail, password, remember }));
+      dispatch(getIsUserLoggedIn());
     }
   };
   const pieceLabelTextForLogin = isAccountExist ? " или e-mail" : "";
@@ -83,12 +102,19 @@ const NotLoggedIn: React.FC = () => {
           inputName="login"
           setIsFormFilled={setIsFormFilled}
         ></InputForLoginForm>
+        {errorLogin && <p className="error">{errorLogin}</p>}
+        {errorRegistrationLogin && (
+          <p className="error">{errorRegistrationLogin}</p>
+        )}
         {!isAccountExist && (
           <InputForLoginForm
             labelText="E-mail"
             inputName="eMail"
             setIsFormFilled={setIsFormFilled}
           ></InputForLoginForm>
+        )}
+        {!isAccountExist && errorRegistrationEMail && (
+          <p className="error">{errorRegistrationEMail}</p>
         )}
         <InputForLoginForm
           labelText="Пароль"
@@ -114,7 +140,8 @@ const NotLoggedIn: React.FC = () => {
           {isAccountExist && <span>У меня нет аккаунта</span>}
           {!isAccountExist && <span>У меня есть аккаунт</span>}
         </button>
-        {!isFormFilled && <p>{formErrorMessage}</p>}
+        {!isFormFilled && <p className="error">{formErrorMessage}</p>}
+        {loadingError && <p className="error">{loadingError}</p>}
         <button type="submit">
           {isAccountExist && <span>Войти</span>}
           {!isAccountExist && <span>Зарегистироваться</span>}

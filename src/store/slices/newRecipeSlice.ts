@@ -1,5 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { postHttp } from "../../dataFromServer/httpRequest";
+import {
+  SpesificRecipe,
+  SpesificRecipeForSending,
+} from "../../interfacesAndTypesTs/recipesInterfaces";
+import { nameFolderOnServer } from "../../App";
 
 const generateId = (
   array: ImageSrc[] | string[],
@@ -19,6 +25,7 @@ const generateId = (
   return id;
 };
 
+//types
 export type ImageSrc = {
   imgSrc: string;
   id: string;
@@ -30,9 +37,17 @@ export type NewRecipeSlice = {
   IngredientFieldsId: string[];
   message: string | null;
   imgFile: any;
-  tagTypes: string[];
+  sendNewRecipeResult: sendingNewRecipeResult;
+  sendNewRecipeResultError: string;
+  sendPhotoResultError: string;
 };
 
+export type sendingNewRecipeResult = {
+  result: boolean | null;
+  id?: string | null;
+};
+
+//initialState
 const initialState: NewRecipeSlice = {
   recipeSteps: [
     {
@@ -46,11 +61,67 @@ const initialState: NewRecipeSlice = {
   message: null,
   imgFile: "",
   mainImgSrs: { id: "mainImg", imgSrc: "" },
-  tagTypes: ["салаты", "втроые блюда", "напитки", "десерты"],
+  sendNewRecipeResult: {
+    result: null,
+    id: null,
+  },
+  sendNewRecipeResultError: "",
+  sendPhotoResultError: "",
 };
 
+//asyncthunks
+export const sendNewRecipeData = createAsyncThunk<
+  sendingNewRecipeResult, //то, что возвращаем, что приходит с фетча
+  SpesificRecipeForSending, //то что передаем в async
+  { rejectValue: string } //что возвращаем в случае ошибки
+>("newRecipe/sendNewRecipeData", async (data, { rejectWithValue }) => {
+  try {
+    let newRecipeResult = await postHttp(
+      `../${nameFolderOnServer}/php/setNewRecipe.php`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      }
+    );
+
+    return newRecipeResult;
+  } catch {
+    return rejectWithValue(
+      "Ошибка отправки рецепта. Попробуйте еще раз или обновите страницу."
+    );
+  }
+});
+
+export const sendNewRecipePhoto = createAsyncThunk<
+  boolean, //то, что возвращаем, что приходит с фетча
+  FormData, //то что передаем в async
+  { rejectValue: string } //что возвращаем в случае ошибки
+>("newRecipe/sendNewRecipePhoto", async (data, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`../${nameFolderOnServer}/php/setPhoto.php`, {
+      method: "POST",
+      body: data,
+    });
+    const result: boolean[] = await response.json();
+
+    return result.reduce((acc, result) => {
+      if (!acc) {
+        return acc;
+      }
+      return result;
+    }, true);
+  } catch {
+    return rejectWithValue(
+      "Ошибка отправки фото. Попробуйте еще раз или обновите страницу."
+    );
+  }
+});
+
 const newRecipeSlice = createSlice({
-  name: "recipesList",
+  name: "newRecipe",
   initialState,
   reducers: {
     addStep(state) {
@@ -89,6 +160,40 @@ const newRecipeSlice = createSlice({
     setImage(state, action) {
       state.imgFile = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Вызывается прямо перед выполнением запроса
+      .addCase(sendNewRecipeData.fulfilled, (state, action) => {
+        state.sendNewRecipeResult.result = action.payload.result;
+        if (action.payload.result === true) {
+          state.sendNewRecipeResult.id = action.payload.id;
+        }
+      })
+      .addCase(
+        sendNewRecipeData.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          if (typeof action.payload === "string") {
+            state.sendNewRecipeResultError = action.payload;
+          }
+        }
+      )
+      .addCase(sendNewRecipePhoto.fulfilled, (state, action) => {
+        state.sendNewRecipeResult.result = action.payload;
+        if (action.payload === true) {
+          state.sendPhotoResultError = "";
+        } else {
+          state.sendPhotoResultError = "Не удалось загрузить фото.";
+        }
+      })
+      .addCase(
+        sendNewRecipePhoto.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          if (typeof action.payload === "string") {
+            state.sendPhotoResultError = action.payload;
+          }
+        }
+      );
   },
 });
 

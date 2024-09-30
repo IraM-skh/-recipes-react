@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import { Comment } from "../../interfacesAndTypesTs/comments";
 import { useAppDispatch } from "../../hooks";
-import {
-  getRecipeCooments,
-  sendRecipeCooment,
-} from "../../store/slices/specificRecipeSlice";
+import { sendRecipeComment } from "../../store/slices/specificRecipeSlice";
 import styles from "../../pages/RecipePage.module.css";
 
 type NewCommentProps = {
@@ -48,12 +45,12 @@ const NewComment: React.FC<NewCommentProps> = (props) => {
           Math.random().toString() +
           Math.random().toString(),
         idRecipe: props.recipeId,
-        autor: nameNewComment.current.value,
+        author: nameNewComment.current.value,
         date: commentDate.getStringDate(),
         text: nameTextComment.current.value,
       };
 
-      dispatch(sendRecipeCooment(comment));
+      dispatch(sendRecipeComment(comment));
 
       nameNewComment.current.value = "";
       nameTextComment.current.value = "";

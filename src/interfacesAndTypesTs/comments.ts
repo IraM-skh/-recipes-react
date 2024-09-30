@@ -1,7 +1,7 @@
 export type Comment = {
   id: string;
   idRecipe: string;
-  autor: string;
+  author?: string;
   date: string;
   text: string;
   imgUrl?: string;

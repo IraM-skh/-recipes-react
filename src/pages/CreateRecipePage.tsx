@@ -1,37 +1,45 @@
 import Ingredient from "../components/createRecipe/Ingredient";
 import RecipeStep from "../components/createRecipe/RecipeStep";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { newRecipeSliceActions } from "../store/slices/newRecipeSlice";
+import {
+  newRecipeSliceActions,
+  sendNewRecipeData,
+  sendNewRecipePhoto,
+} from "../store/slices/newRecipeSlice";
 import {
   ActionCreatorWithoutPayload,
   ActionCreatorWithPayload,
 } from "@reduxjs/toolkit";
-import TagTypes from "../components/createRecipe/TagTypes";
 import ImagePreloader from "../components/createRecipe/ImagePreloader";
 import {
+  ingredients,
   RecipeStepType,
   SpesificRecipe,
+  SpesificRecipeForSending,
+  StepsForSending,
 } from "../interfacesAndTypesTs/recipesInterfaces";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { getTagsData } from "../store/slices/recipesDetailsSlice";
 import styles from "./CreateRecipePage.module.css";
+import Tags from "../components/createRecipe/Tags";
 
 export type DataForDeleteHandler = {
   id: string;
   action:
-    | ActionCreatorWithPayload<string, "recipesList/removeStep">
-    | ActionCreatorWithPayload<string, "recipesList/removeIngredientField">;
+    | ActionCreatorWithPayload<string, "newRecipe/removeStep">
+    | ActionCreatorWithPayload<string, "newRecipe/removeIngredientField">;
 };
 
 const CreateRecipePage: React.FC = () => {
+  //-----loading tags for constructor
   useEffect(() => {
     dispatch(getTagsData());
   }, []);
   //-----types
   type CrateRecipeActions =
-    | ActionCreatorWithoutPayload<"recipesList/addIngredientField">
-    | ActionCreatorWithoutPayload<"recipesList/addTagTypeField">
-    | ActionCreatorWithoutPayload<"recipesList/addStep">;
+    | ActionCreatorWithoutPayload<"newRecipe/addIngredientField">
+    | ActionCreatorWithoutPayload<"newRecipe/addTagTypeField">
+    | ActionCreatorWithoutPayload<"newRecipe/addStep">;
 
   type FormInputAndSelectFiedls = {
     recipeTitle: HTMLInputElement;
@@ -39,20 +47,27 @@ const CreateRecipePage: React.FC = () => {
     ingredient: RadioNodeList | HTMLInputElement;
     ingredient_quantity: RadioNodeList | HTMLInputElement;
     ingredient_measurement: RadioNodeList | HTMLSelectElement;
+    description: HTMLInputElement;
   };
   type FormStepFiedls = {
     [key: string]: HTMLInputElement;
   };
-
   type FormFiedls = FormInputAndSelectFiedls & FormStepFiedls;
 
   //-----get states and dispatch
   const dispatch = useAppDispatch();
-  const { recipeSteps, mainImgSrs, IngredientFieldsId } = useAppSelector(
-    (state) => state.newRecipe
-  );
+  const {
+    recipeSteps,
+    mainImgSrs,
+    IngredientFieldsId,
+    sendNewRecipeResult,
+    sendPhotoResultError,
+    sendNewRecipeResultError,
+  } = useAppSelector((state) => state.newRecipe);
+
   const { tags } = useAppSelector((state) => state.recipesDetails);
   const tagTypes = tags.tags?.type;
+  const tagDiet = tags.tags?.diet;
   //-----work with element and node list
   const getValueOfElementOrNodeList = (
     element: RadioNodeList | HTMLInputElement | HTMLSelectElement
@@ -65,6 +80,21 @@ const CreateRecipePage: React.FC = () => {
     }
     return element.value;
   };
+
+  //-----sending photo after load recioe
+  const formTest: React.MutableRefObject<HTMLFormElement | null> = useRef(null);
+
+  useEffect(() => {
+    if (
+      formTest.current !== null &&
+      sendNewRecipeResult.id &&
+      sendNewRecipeResult.result
+    ) {
+      const formData = new FormData(formTest.current);
+      formData.append("id", sendNewRecipeResult.id);
+      dispatch(sendNewRecipePhoto(formData));
+    }
+  }, [sendNewRecipeResult.id]);
 
   //-----Handlers
   const addFieldHandler = (
@@ -80,44 +110,65 @@ const CreateRecipePage: React.FC = () => {
     event.preventDefault();
     const form = event.currentTarget;
 
-    //---steps
-    const steps = recipeSteps.map((step): RecipeStepType => {
+    //-steps
+
+    const steps = recipeSteps.map((step): StepsForSending => {
       return {
-        imgSrc: step.imgSrc,
         id: step.id,
         stepText: form[step.id].value,
       };
     });
-    //---ingredients
-    const ingredients = getValueOfElementOrNodeList(form.ingredient);
+    //-ingredients
+    const ingredientsAtInput = getValueOfElementOrNodeList(form.ingredient);
     const ingredientQuantities = getValueOfElementOrNodeList(
       form.ingredient_quantity
     );
     const ingredientMeasurements = getValueOfElementOrNodeList(
       form.ingredient_measurement
     );
-    //---data
-    const dataFromUser: SpesificRecipe = {
+    const ingredients = [];
+    if (
+      typeof ingredientsAtInput === "string" &&
+      typeof ingredientQuantities === "string" &&
+      typeof ingredientMeasurements === "string"
+    ) {
+      ingredients.push({
+        ingredient: ingredientsAtInput,
+        ingredientQuantitie: ingredientQuantities,
+        ingredientMeasurement: ingredientMeasurements,
+      });
+    }
+    if (
+      typeof ingredientsAtInput !== "string" &&
+      typeof ingredientQuantities !== "string" &&
+      typeof ingredientMeasurements !== "string"
+    ) {
+      ingredientsAtInput.forEach((ingredient, index) => {
+        ingredients.push({
+          ingredient,
+          ingredientQuantitie: ingredientQuantities[index],
+          ingredientMeasurement: ingredientMeasurements[index],
+        });
+      });
+    }
+
+    //-data
+    const dataFromUser: SpesificRecipeForSending = {
       title: form.recipeTitle.value,
       tags: {
-        type: [...form.tagTypes]
+        type: [...form.TagTypes]
+          .filter((el) => el.checked)
+          .map((el) => el.value),
+        diet: [...form.TagDiet]
           .filter((el) => el.checked)
           .map((el) => el.value),
       },
-      ingredients: {},
+      ingredients,
       steps,
-      mainImgSrs,
+      description: form.description.value,
     };
-
-    for (let index = 0; index < ingredients.length; index++) {
-      dataFromUser.ingredients[ingredients[index]] = [
-        ingredientQuantities[index],
-        ingredientMeasurements[index],
-      ];
-    }
-
-    //-------ДОБАВИТЬ ОТПРАВКУ НА СЕРВЕР
-    console.log(dataFromUser);
+    //-sending data
+    dispatch(sendNewRecipeData(dataFromUser));
   };
 
   const deleteFieldHandler = (
@@ -130,7 +181,7 @@ const CreateRecipePage: React.FC = () => {
   //-----JSX
   return (
     <section className={styles.create_recipe}>
-      <form onSubmit={createNewRecipeHandler}>
+      <form onSubmit={createNewRecipeHandler} ref={formTest}>
         <h3>Название рецепта</h3>
         <input
           placeholder="Название рецепта"
@@ -146,7 +197,7 @@ const CreateRecipePage: React.FC = () => {
             inputName="prev_main_picture_input"
           />
 
-          <input type="text"></input>
+          <input type="text" name="description"></input>
         </div>
         <h3>Ингредиенты</h3>
         <div className="ingredients_container">
@@ -192,10 +243,27 @@ const CreateRecipePage: React.FC = () => {
           <div className={styles.tag_types_container}>
             {tagTypes &&
               tagTypes.map((tag: string, index: number) => (
-                <TagTypes key={"TagTypes" + index} value={tag} />
+                <Tags
+                  key={"TagTypes" + index}
+                  value={tag}
+                  inputName="TagTypes"
+                />
+              ))}
+          </div>
+          <div className={styles.tag_diet_container}>
+            {tagDiet &&
+              tagDiet.map((tag: string, index: number) => (
+                <Tags key={"TagDiet" + index} value={tag} inputName="TagDiet" />
               ))}
           </div>
         </div>
+        {sendNewRecipeResultError !== "" && (
+          <p className="error">{sendNewRecipeResultError}</p>
+        )}
+        {sendPhotoResultError !== "" && (
+          <p className="error">{sendPhotoResultError}</p>
+        )}
+        {sendNewRecipeResult.id && <p>{sendNewRecipeResult.id}</p>}
         <button type="submit">Добавить рецепт</button>
       </form>
     </section>

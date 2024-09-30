@@ -5,17 +5,18 @@ import { ImageSrc } from "../store/slices/newRecipeSlice";
 export interface IRecipesData {
   title: string;
   imgUrl: string;
-  ingredients: ingredients;
-  tags: Tags;
   id: string;
+  ingredients: [ingredients];
+  tags: Tags;
   steps?: Array<{
     src: string;
     stepsDescription: string;
   }>;
+  description?: string;
 }
 
-type ingredients = {
-  [key: string]: [number | string, string?];
+export type ingredients = {
+  [key: string]: [string, string?];
 };
 export type Tags = {
   type: string[];
@@ -31,7 +32,27 @@ export type RecipeStepType = ImageSrc & {
 export type SpesificRecipe = {
   title: string;
   tags: Tags;
-  ingredients: ingredients;
+  ingredients: Array<{
+    ingredient: string;
+    ingredientQuantitie: string;
+    ingredientMeasurement: string;
+  }>;
   steps: RecipeStepType[];
-  mainImgSrs: ImageSrc;
+  mainImgSrs?: ImageSrc;
+  description: string;
+};
+
+export type StepsForSending = { id: string; stepText: string };
+
+export type SpesificRecipeForSending = {
+  title: string;
+  tags: Tags;
+  ingredients: Array<{
+    ingredient: string;
+    ingredientQuantitie: string;
+    ingredientMeasurement: string;
+  }>;
+  steps: StepsForSending[];
+  mainImgSrs?: ImageSrc;
+  description: string;
 };
