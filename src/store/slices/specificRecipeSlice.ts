@@ -33,11 +33,11 @@ export const getRecipeData = createAsyncThunk<
   }
 });
 
-export const getRecipeCooments = createAsyncThunk<
+export const getRecipeComments = createAsyncThunk<
   Comments,
   string,
   { rejectValue: string }
->("specificRecipe/getRecipeCooments", async (idRecipe, { rejectWithValue }) => {
+>("specificRecipe/getRecipeComments", async (idRecipe, { rejectWithValue }) => {
   try {
     let commentsData = await postHttp(
       `../${nameFolderOnServer}/php/getComments.php`,
@@ -61,13 +61,13 @@ export const getRecipeCooments = createAsyncThunk<
     );
   }
 });
-//ПОПРАВИТЬ sendRecipeCООment
-export const sendRecipeCooment = createAsyncThunk<
+
+export const sendRecipeComment = createAsyncThunk<
   string,
   Comment,
   { rejectValue: string }
 >(
-  "specificRecipe/sendRecipeCooment",
+  "specificRecipe/sendRecipeComment",
   async (commentData, { rejectWithValue }) => {
     try {
       await fetch(`../${nameFolderOnServer}/php/setNewComment.php`, {
@@ -110,12 +110,10 @@ const specificRecipeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Вызывается прямо перед выполнением запроса
       .addCase(getRecipeData.pending, (state) => {
         state.status = "loading";
         state.message = "Загрузка рецептов";
       })
-      // Вызывается, если запрос успешно выполнился
       .addCase(getRecipeData.fulfilled, (state, action) => {
         state.status = "fulfilled";
         state.message = "Данные получены";
@@ -131,10 +129,10 @@ const specificRecipeSlice = createSlice({
           }
         }
       )
-      .addCase(getRecipeCooments.fulfilled, (state, action) => {
+      .addCase(getRecipeComments.fulfilled, (state, action) => {
         state.comments = action.payload;
       })
-      .addCase(sendRecipeCooment.fulfilled, (state, action) => {
+      .addCase(sendRecipeComment.fulfilled, (state, action) => {
         state.addNewCommentStatus = true;
       });
   },

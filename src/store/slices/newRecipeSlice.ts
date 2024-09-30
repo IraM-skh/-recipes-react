@@ -1,10 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { postHttp } from "../../dataFromServer/httpRequest";
-import {
-  SpesificRecipe,
-  SpesificRecipeForSending,
-} from "../../interfacesAndTypesTs/recipesInterfaces";
+import { SpesificRecipeForSending } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { nameFolderOnServer } from "../../App";
 
 const generateId = (
@@ -71,9 +68,9 @@ const initialState: NewRecipeSlice = {
 
 //asyncthunks
 export const sendNewRecipeData = createAsyncThunk<
-  sendingNewRecipeResult, //то, что возвращаем, что приходит с фетча
-  SpesificRecipeForSending, //то что передаем в async
-  { rejectValue: string } //что возвращаем в случае ошибки
+  sendingNewRecipeResult,
+  SpesificRecipeForSending,
+  { rejectValue: string }
 >("newRecipe/sendNewRecipeData", async (data, { rejectWithValue }) => {
   try {
     let newRecipeResult = await postHttp(
@@ -96,9 +93,9 @@ export const sendNewRecipeData = createAsyncThunk<
 });
 
 export const sendNewRecipePhoto = createAsyncThunk<
-  boolean, //то, что возвращаем, что приходит с фетча
-  FormData, //то что передаем в async
-  { rejectValue: string } //что возвращаем в случае ошибки
+  boolean,
+  FormData,
+  { rejectValue: string }
 >("newRecipe/sendNewRecipePhoto", async (data, { rejectWithValue }) => {
   try {
     const response = await fetch(`../${nameFolderOnServer}/php/setPhoto.php`, {
@@ -163,7 +160,6 @@ const newRecipeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Вызывается прямо перед выполнением запроса
       .addCase(sendNewRecipeData.fulfilled, (state, action) => {
         state.sendNewRecipeResult.result = action.payload.result;
         if (action.payload.result === true) {

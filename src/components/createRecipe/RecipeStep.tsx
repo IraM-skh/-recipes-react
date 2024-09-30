@@ -1,4 +1,3 @@
-import { useAppDispatch, useAppSelector } from "../../hooks";
 import { DataForDeleteHandler } from "../../pages/CreateRecipePage";
 import { newRecipeSliceActions } from "../../store/slices/newRecipeSlice";
 import ImagePreloader from "./ImagePreloader";

@@ -81,7 +81,6 @@ const RecipesPage = () => {
   const sortDiet = searchUrlParams.get("sortDiet")?.split(",");
   let sortRecipesList: Recipes = [];
   if (sortTypes || sortDiet) {
-    console.log("Сортировка по", sortTypes, sortDiet);
     sortRecipesList.push(
       ...recipesList.filter((recipe) => {
         if (

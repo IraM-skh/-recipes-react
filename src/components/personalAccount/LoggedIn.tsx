@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import loginDataSlice, {
+import {
   getIsUserLoggedIn,
   getUserData,
   userDataSliceActions,
@@ -39,7 +39,6 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
   return (
     <div>
       <div className="users_profile">
-        {/* возможно добавить фото? */}
         <p>{props.login}</p>
       </div>
       <button type="button" onClick={logoutHandler}>

@@ -11,7 +11,7 @@ const PersonalAccountPage: React.FC = () => {
   useEffect(() => {
     dispatch(getIsUserLoggedIn());
   }, []);
-  //нужен ли логин статус, попробовать без него
+
   return (
     <div>
       {isUserLoggedIn.isLogin && (

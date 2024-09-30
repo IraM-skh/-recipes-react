@@ -12,9 +12,6 @@ import {
 } from "@reduxjs/toolkit";
 import ImagePreloader from "../components/createRecipe/ImagePreloader";
 import {
-  ingredients,
-  RecipeStepType,
-  SpesificRecipe,
   SpesificRecipeForSending,
   StepsForSending,
 } from "../interfacesAndTypesTs/recipesInterfaces";

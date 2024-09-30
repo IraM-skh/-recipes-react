@@ -30,8 +30,6 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
       } else {
         resetErrorMessage();
       }
-
-      //добавить проверку дубля логина в БД
       return;
     }
     if (props.inputName === "eMail") {
@@ -44,7 +42,7 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
       } else {
         resetErrorMessage();
       }
-      //добавить проверку дубля мыла в БД
+
       return;
     }
     if (props.inputName === "password") {

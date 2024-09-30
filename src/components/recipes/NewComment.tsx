@@ -36,7 +36,6 @@ const NewComment: React.FC<NewCommentProps> = (props) => {
         );
       },
     };
-    //добавить Отправку формы
     if (nameNewComment.current && nameTextComment.current) {
       const comment: Comment = {
         id:
@@ -58,7 +57,6 @@ const NewComment: React.FC<NewCommentProps> = (props) => {
   };
 
   return (
-    //добавить загрузку изображения
     <form onSubmit={submitFormNewCommentHandler}>
       <div className={styles.name_form_comment}>
         <label htmlFor="name">Ваше имя:</label>

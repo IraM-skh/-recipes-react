@@ -66,7 +66,7 @@ const NotLoggedIn: React.FC = () => {
         return;
       }
 
-      //ЛОГИН
+      //login
       await dispatch(sendLogin({ login, password, remember }));
       dispatch(getIsUserLoggedIn());
       return;
@@ -86,7 +86,7 @@ const NotLoggedIn: React.FC = () => {
         setFormErrorMessage(() => "Заполните все поля");
         return;
       }
-      //РЕГИСТРАЦИЯ
+      //Registration
       await dispatch(sendRegistration({ login, eMail, password, remember }));
       dispatch(getIsUserLoggedIn());
     }

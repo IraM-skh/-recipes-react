@@ -79,9 +79,9 @@ export const getUserData = createAsyncThunk<
 });
 
 export const sendRegistration = createAsyncThunk<
-  RegistrationResult, //то, что возвращаем, что приходит с фетча
-  RegistrationData, //то что передаем в async
-  { rejectValue: string } //что возвращаем в случае ошибки
+  RegistrationResult,
+  RegistrationData,
+  { rejectValue: string }
 >("userData/sendRegistration", async (data, { rejectWithValue }) => {
   try {
     let registrationInfo = await postHttp(
@@ -104,9 +104,9 @@ export const sendRegistration = createAsyncThunk<
 });
 
 export const login = createAsyncThunk<
-  boolean, //то, что возвращаем, что приходит с фетча
-  LoginData, //то что передаем в async
-  { rejectValue: string } //что возвращаем в случае ошибки
+  boolean,
+  LoginData,
+  { rejectValue: string }
 >("userData/login", async (data, { rejectWithValue }) => {
   try {
     let registrationInfo = await postHttp(
@@ -162,11 +162,11 @@ const userDataSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Вызывается прямо перед выполнением запроса
+
       .addCase(getIsUserLoggedIn.pending, (state) => {
         state.statusIsLogged = "loading";
       })
-      // Вызывается, если запрос успешно выполнился
+
       .addCase(getIsUserLoggedIn.fulfilled, (state, action) => {
         state.statusIsLogged = "fulfilled";
         state.isLogin = action.payload.isLogin;

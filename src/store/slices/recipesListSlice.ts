@@ -48,12 +48,10 @@ const recipesListSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Вызывается прямо перед выполнением запроса
       .addCase(getRecipesData.pending, (state) => {
         state.status = "loading";
         state.message = "Загрузка рецептов";
       })
-      // Вызывается, если запрос успешно выполнился
       .addCase(getRecipesData.fulfilled, (state, action) => {
         state.status = "fulfilled";
         state.message = "Данные получены";

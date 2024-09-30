@@ -38,7 +38,6 @@ const RecipePage: React.FC = () => {
 
   if (recipe !== null && typeof recipeId === "string") {
     const ingredients = recipe.ingredients;
-    console.log(recipe);
     const tagsType = recipe.tags.type;
     const tagsDiet = recipe.tags.diet;
 
