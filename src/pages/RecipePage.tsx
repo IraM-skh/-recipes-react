@@ -45,6 +45,10 @@ const RecipePage: React.FC = () => {
       <Fragment>
         <div className="recipe_container">
           <h3 className={styles.recipe_title}>{recipe.title}</h3>
+          <p>
+            Автор рецепта
+            <Link to={`/pa/${specificRecipeData.recipe?.author}`}></Link>
+          </p>
           <div className={styles.tags_type + " tags_type"}>
             {tagRender(tagsType, "type")}
           </div>

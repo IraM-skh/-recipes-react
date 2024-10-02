@@ -13,6 +13,7 @@ export interface IRecipesData {
     stepsDescription: string;
   }>;
   description?: string;
+  author?: string;
 }
 
 export type ingredients = {

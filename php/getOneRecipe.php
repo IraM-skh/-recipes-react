@@ -11,7 +11,7 @@ while($row = mysqli_fetch_array($recipesDB)){
    $recipesArrForObj["imgUrl"] = $row["img_url"];
    $recipesArrForObj["id"] = $row["id"];
    $recipesArrForObj["description"] = $row["description"];
-   
+   $recipesArrForObj["author"] =$row["author_login"];
     //    $recipesArrForObj["tags_diet"] = $row["tags_diet"];
     //    $recipesArrForObj["tag_type"] = $row["tag_type"];
     $idTagsDiet = explode(",", $row["tags_diet"]);

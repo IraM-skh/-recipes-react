@@ -30,6 +30,9 @@ function App() {
         <Route path="/recipe/:recipeId" exact>
           <RecipePage></RecipePage>
         </Route>
+        <Route path="/pa/:login" exact>
+          <PersonalAccountPage />
+        </Route>
       </Switch>
       <Footer />
     </Fragment>

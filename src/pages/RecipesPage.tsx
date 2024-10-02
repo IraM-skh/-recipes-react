@@ -1,7 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 import RecipeCard from "../components/recipes/RecipeCard";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
 import { getRecipesData } from "../store/slices/recipesListSlice";
 import { useAppSelector } from "../hooks";
 import { useAppDispatch } from "../hooks";
@@ -11,22 +10,25 @@ import { Recipes } from "../interfacesAndTypesTs/recipesInterfaces";
 
 import stylesCreateRecipe from "./CreateRecipePage.module.css";
 import styles from "./RecipesPage.module.css";
+import Checkbox from "../components/recipes/Checkbox";
 const RecipesPage = () => {
   //-----types
   type filterTagsForm = {
     menuTagsType: NodeListOf<HTMLInputElement>;
     menuTagsDiet: NodeListOf<HTMLInputElement>;
   };
-  //---------
+  //----state, url, dispatch
+
   const url = useLocation();
   const history = useHistory();
+
   const recipesList = useAppSelector((state) => state.recipesList.recipes);
   const statusLoadRecipes = useAppSelector((state) => state.recipesList.status);
   const tags = useAppSelector((state) => state.recipesDetails.tags.tags);
-
   const messageLoadRecipes = useAppSelector(
     (state) => state.recipesList.message
   );
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getRecipesData());
@@ -37,13 +39,16 @@ const RecipesPage = () => {
   }, []);
 
   //handlers
+
   const applayFilterHandler: React.FormEventHandler<
     HTMLFormElement & filterTagsForm
   > = (event) => {
     event.preventDefault();
+
     const form = event.currentTarget;
     const checkedTypes: HTMLInputElement[] = [];
     const checkedDiet: HTMLInputElement[] = [];
+
     form.menuTagsType.forEach((input) => {
       if (input.checked) {
         checkedTypes.push(input);
@@ -54,7 +59,6 @@ const RecipesPage = () => {
         checkedDiet.push(input);
       }
     });
-
     if (checkedTypes.length || checkedDiet.length) {
       let sortTypes,
         sortDiet = "";
@@ -76,9 +80,21 @@ const RecipesPage = () => {
     }
   };
   const searchUrlParams = new URLSearchParams(url.search);
+  const changePageHandler: React.FormEventHandler<HTMLButtonElement> = (
+    event
+  ) => {
+    searchUrlParams.set("page", event.currentTarget.value);
+    history.push({
+      pathname: url.pathname,
+      search: searchUrlParams.toString(),
+    });
+  };
+
   //массивы с параметрами url
+  const pageNumberFromUrl = searchUrlParams.get("page");
   const sortTypes = searchUrlParams.get("sortTypes")?.split(",");
   const sortDiet = searchUrlParams.get("sortDiet")?.split(",");
+
   let sortRecipesList: Recipes = [];
   if (sortTypes || sortDiet) {
     sortRecipesList.push(
@@ -131,22 +147,75 @@ const RecipesPage = () => {
     );
   }
 
+  //pagination
+  const pageBtnLimit = 5;
+  const limitRecipesOnPage = 2;
+  let numberOfRec: number;
+  if (sortRecipesList.length > 0) {
+    numberOfRec = sortRecipesList.length;
+  } else {
+    numberOfRec = recipesList.length;
+  }
+  const paginationArrey: number[] = [];
+
+  const numberOfPages =
+    numberOfRec % limitRecipesOnPage
+      ? Math.floor(numberOfRec / limitRecipesOnPage) + 1
+      : numberOfRec / limitRecipesOnPage;
+  const pageNumber = pageNumberFromUrl ? Number(pageNumberFromUrl) : 1;
+
+  let startBntPagination = 0;
+  let endBtnPagination = 0;
+
+  if (pageNumber <= Math.round(pageBtnLimit / 2)) {
+    startBntPagination = 1;
+    endBtnPagination = pageBtnLimit;
+  } else if (pageNumber > numberOfPages - Math.round(pageBtnLimit / 2)) {
+    startBntPagination = numberOfPages - pageBtnLimit + 1;
+    endBtnPagination = numberOfPages;
+  } else {
+    startBntPagination = pageNumber - Math.round(pageBtnLimit / 2) + 1;
+    endBtnPagination = pageNumber + Math.round(pageBtnLimit / 2) - 1;
+  }
+
+  for (let index = startBntPagination; index <= endBtnPagination; index++) {
+    paginationArrey.push(index);
+  }
+  //final recipes list with pagination
+  let finalRecipeList: Recipes = [];
+  const getFinalRecipeList = (recipesList: Recipes) => {
+    const endInd = limitRecipesOnPage * pageNumber;
+    const startInd = endInd - limitRecipesOnPage + 1;
+    return recipesList.slice(startInd - 1, endInd);
+  };
+  if (sortRecipesList.length > 0) {
+    finalRecipeList = getFinalRecipeList(sortRecipesList);
+  } else {
+    finalRecipeList = getFinalRecipeList(recipesList);
+  }
+
   return (
     <Fragment>
       <form className="filter_tags" onSubmit={applayFilterHandler}>
         <div className={stylesCreateRecipe.tag_types_container}>
           {tags &&
             tags.type.map((type) => {
+              console.log(sortTypes && sortTypes.includes(type));
               return (
                 <label
                   key={`type` + type}
                   className={stylesCreateRecipe.checkbox_label}
                 >
-                  <input
-                    type="checkbox"
-                    name="menuTagsType"
-                    value={type}
-                  ></input>
+                  {sortTypes && sortTypes.includes(type) ? (
+                    <Checkbox value={type} name="menuTagsType" />
+                  ) : (
+                    <input
+                      type="checkbox"
+                      name="menuTagsType"
+                      value={type}
+                    ></input>
+                  )}
+
                   <span className={stylesCreateRecipe.custom_checkbox}>
                     {type}
                   </span>
@@ -169,11 +238,16 @@ const RecipesPage = () => {
                   key={`type` + type}
                   className={stylesCreateRecipe.checkbox_label}
                 >
-                  <input
-                    type="checkbox"
-                    name="menuTagsDiet"
-                    value={type}
-                  ></input>
+                  {sortDiet && sortDiet.includes(type) ? (
+                    <Checkbox value={type} name="menuTagsDiet" />
+                  ) : (
+                    <input
+                      type="checkbox"
+                      name="menuTagsDiet"
+                      value={type}
+                    ></input>
+                  )}
+
                   <span className={stylesCreateRecipe.custom_checkbox}>
                     {type}
                   </span>
@@ -185,17 +259,60 @@ const RecipesPage = () => {
       </form>
       {statusLoadRecipes === "loading" && <p>{messageLoadRecipes}</p>}
       {statusLoadRecipes !== "failed" &&
-        !url.search &&
-        recipesList.map((recipe, index) => {
+        finalRecipeList.map((recipe, index) => {
           return <RecipeCard key={recipe.id + index} recipe={recipe} />;
         })}
       {statusLoadRecipes === "failed" && <p>{messageLoadRecipes}</p>}
-      {statusLoadRecipes !== "failed" &&
-        url.search &&
-        sortRecipesList.map((recipe, index) => {
-          return <RecipeCard key={recipe.id + index} recipe={recipe} />;
+      <div className={styles.pagination_container}>
+        {paginationArrey.map((number) => {
+          if (pageNumberFromUrl && number === Number(pageNumber)) {
+            return (
+              <button
+                className={
+                  styles.page_btn +
+                  " page_" +
+                  number +
+                  " " +
+                  styles.active_page_btn
+                }
+                onClick={changePageHandler}
+                type="button"
+                value={number}
+              >
+                {number}
+              </button>
+            );
+          }
+          if (!pageNumberFromUrl && number === 1) {
+            return (
+              <button
+                className={
+                  styles.page_btn +
+                  " page_" +
+                  number +
+                  " " +
+                  styles.active_page_btn
+                }
+                onClick={changePageHandler}
+                type="button"
+                value={number}
+              >
+                {number}
+              </button>
+            );
+          }
+          return (
+            <button
+              className={styles.page_btn + " page_" + number}
+              onClick={changePageHandler}
+              type="button"
+              value={number}
+            >
+              {number}
+            </button>
+          );
         })}
-      {statusLoadRecipes === "failed" && <p>{messageLoadRecipes}</p>}
+      </div>
     </Fragment>
   );
 };

@@ -57,12 +57,19 @@ export const getIsUserLoggedIn = createAsyncThunk<
 
 export const getUserData = createAsyncThunk<
   UserInfo,
-  undefined,
+  string,
   { rejectValue: string }
->("userData/getUserData", async (_, { rejectWithValue }) => {
+>("userData/getUserData", async (data, { rejectWithValue }) => {
   try {
-    let userData = await getHttp(
-      `../${nameFolderOnServer}/php/getUserData.php`
+    let userData = await postHttp(
+      `../${nameFolderOnServer}/php/getUserData.php`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      }
     );
     if (userData === null) {
       userData = {
@@ -151,6 +158,7 @@ const initialState: InitialState = {
   errorRegistrationLogin: "",
   errorRegistrationEMail: "",
   loadingError: "",
+  errorUserInfo: "",
 };
 const userDataSlice = createSlice({
   name: "userData",
@@ -187,7 +195,8 @@ const userDataSlice = createSlice({
       .addCase(getUserData.fulfilled, (state, action) => {
         state.statusUserInfo = "fulfilled";
 
-        if (state.errorUserInfo === undefined) {
+        if (action.payload.errorUserInfo === undefined) {
+          state.errorUserInfo = "";
           state.favoriteRecipes = action.payload.favoriteRecipes;
           state.ownComments = action.payload.ownComments;
           state.ownRecipes = action.payload.ownRecipes;

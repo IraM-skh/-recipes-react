@@ -38,3 +38,16 @@
 .tag_diet_container {
   margin-top: 1rem;
 }
+.pagination_container {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+.page_btn {
+  border-radius: 5px;
+  background-color: antiquewhite;
+  cursor: pointer;
+}
+.active_page_btn {
+  background-color: rgb(251, 210, 161);
+}
