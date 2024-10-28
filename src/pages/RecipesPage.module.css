@@ -1,5 +1,5 @@
 .recipe_card {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.306);
+  box-shadow: 0 0 10px #00000026;
   padding: 1rem;
   border-radius: 5px;
   margin-bottom: 1rem;
@@ -41,13 +41,34 @@
 .pagination_container {
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 1%;
+  margin-bottom: 1rem;
 }
 .page_btn {
   border-radius: 5px;
-  background-color: antiquewhite;
+  background-color: #a3a3a328;
   cursor: pointer;
+  border: none;
+  padding: 0.8% 1.2%;
+  transition: all 0.5s;
+}
+.page_btn:hover {
+  background-color: #d5920242;
 }
 .active_page_btn {
-  background-color: rgb(251, 210, 161);
+  color: #c28400;
+  background-color: #c285001f;
+}
+.filter_btn_container {
+  display: flex;
+  align-items: center;
+}
+.filter_btn_border {
+  height: 1px;
+  width: 40%;
+  background-color: #aabc03;
+}
+.status_load {
+  text-align: center;
+  margin: 2rem 0;
 }

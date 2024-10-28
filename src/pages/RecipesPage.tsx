@@ -25,6 +25,9 @@ const RecipesPage = () => {
   const recipesList = useAppSelector((state) => state.recipesList.recipes);
   const statusLoadRecipes = useAppSelector((state) => state.recipesList.status);
   const tags = useAppSelector((state) => state.recipesDetails.tags.tags);
+  const statusLoadTags = useAppSelector(
+    (state) => state.recipesDetails.tags.status
+  );
   const messageLoadRecipes = useAppSelector(
     (state) => state.recipesList.message
   );
@@ -196,85 +199,125 @@ const RecipesPage = () => {
 
   return (
     <Fragment>
-      <form className="filter_tags" onSubmit={applayFilterHandler}>
-        <div className={stylesCreateRecipe.tag_types_container}>
-          {tags &&
-            tags.type.map((type) => {
-              console.log(sortTypes && sortTypes.includes(type));
-              return (
-                <label
-                  key={`type` + type}
-                  className={stylesCreateRecipe.checkbox_label}
-                >
-                  {sortTypes && sortTypes.includes(type) ? (
-                    <Checkbox value={type} name="menuTagsType" />
-                  ) : (
-                    <input
-                      type="checkbox"
-                      name="menuTagsType"
-                      value={type}
-                    ></input>
-                  )}
+      {statusLoadTags == "fulfilled" && (
+        <form className="filter_tags" onSubmit={applayFilterHandler}>
+          <div className={stylesCreateRecipe.tags_container}>
+            {tags &&
+              tags.type.map((type) => {
+                console.log(sortTypes && sortTypes.includes(type));
+                return (
+                  <label
+                    key={`type` + type}
+                    className={stylesCreateRecipe.checkbox_label}
+                  >
+                    {sortTypes && sortTypes.includes(type) ? (
+                      <Checkbox value={type} name="menuTagsType" />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        name="menuTagsType"
+                        value={type}
+                      ></input>
+                    )}
 
-                  <span className={stylesCreateRecipe.custom_checkbox}>
-                    {type}
-                  </span>
-                </label>
-              );
-            })}
-        </div>
-        <div
-          className={
-            stylesCreateRecipe.tag_types_container +
-            " " +
-            styles.tag_diet_container
-          }
-        >
-          {tags &&
-            tags.diet &&
-            tags.diet.map((type) => {
-              return (
-                <label
-                  key={`type` + type}
-                  className={stylesCreateRecipe.checkbox_label}
-                >
-                  {sortDiet && sortDiet.includes(type) ? (
-                    <Checkbox value={type} name="menuTagsDiet" />
-                  ) : (
-                    <input
-                      type="checkbox"
-                      name="menuTagsDiet"
-                      value={type}
-                    ></input>
-                  )}
+                    <span className={stylesCreateRecipe.custom_checkbox}>
+                      {type}
+                    </span>
+                  </label>
+                );
+              })}
+          </div>
+          <div
+            className={
+              stylesCreateRecipe.tags_container +
+              " " +
+              styles.tag_diet_container
+            }
+          >
+            {tags &&
+              tags.diet &&
+              tags.diet.map((type) => {
+                return (
+                  <label
+                    key={`type` + type}
+                    className={stylesCreateRecipe.checkbox_label}
+                  >
+                    {sortDiet && sortDiet.includes(type) ? (
+                      <Checkbox value={type} name="menuTagsDiet" />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        name="menuTagsDiet"
+                        value={type}
+                      ></input>
+                    )}
 
-                  <span className={stylesCreateRecipe.custom_checkbox}>
-                    {type}
-                  </span>
-                </label>
-              );
-            })}
-        </div>
-        <button type="submit">Применить фильтр</button>
-      </form>
-      {statusLoadRecipes === "loading" && <p>{messageLoadRecipes}</p>}
+                    <span className={stylesCreateRecipe.custom_checkbox}>
+                      {type}
+                    </span>
+                  </label>
+                );
+              })}
+          </div>
+          <div className={styles.filter_btn_container}>
+            <p className={styles.filter_btn_border}></p>
+            <button type="submit">Применить фильтр</button>
+            <p className={styles.filter_btn_border}></p>
+          </div>
+        </form>
+      )}
+      {statusLoadRecipes === "loading" && (
+        <p className={styles.status_load}>{messageLoadRecipes}</p>
+      )}
       {statusLoadRecipes !== "failed" &&
         finalRecipeList.map((recipe, index) => {
           return <RecipeCard key={recipe.id + index} recipe={recipe} />;
         })}
-      {statusLoadRecipes === "failed" && <p>{messageLoadRecipes}</p>}
-      <div className={styles.pagination_container}>
-        {paginationArrey.map((number) => {
-          if (pageNumberFromUrl && number === Number(pageNumber)) {
+      {statusLoadRecipes === "failed" && (
+        <p className={styles.status_load}>{messageLoadRecipes}</p>
+      )}
+      {statusLoadRecipes !== "failed" && (
+        <div className={styles.pagination_container}>
+          {paginationArrey.map((number) => {
+            if (pageNumberFromUrl && number === Number(pageNumber)) {
+              return (
+                <button
+                  className={
+                    styles.page_btn +
+                    " page_" +
+                    number +
+                    " " +
+                    styles.active_page_btn
+                  }
+                  onClick={changePageHandler}
+                  type="button"
+                  value={number}
+                >
+                  {number}
+                </button>
+              );
+            }
+            if (!pageNumberFromUrl && number === 1) {
+              return (
+                <button
+                  className={
+                    styles.page_btn +
+                    " page_" +
+                    number +
+                    " " +
+                    styles.active_page_btn
+                  }
+                  onClick={changePageHandler}
+                  type="button"
+                  value={number}
+                >
+                  {number}
+                </button>
+              );
+            }
             return (
               <button
-                className={
-                  styles.page_btn +
-                  " page_" +
-                  number +
-                  " " +
-                  styles.active_page_btn
-                }
+                className={styles.page_btn + " page_" + number}
                 onClick={changePageHandler}
                 type="button"
                 value={number}
@@ -282,37 +325,9 @@ const RecipesPage = () => {
                 {number}
               </button>
             );
-          }
-          if (!pageNumberFromUrl && number === 1) {
-            return (
-              <button
-                className={
-                  styles.page_btn +
-                  " page_" +
-                  number +
-                  " " +
-                  styles.active_page_btn
-                }
-                onClick={changePageHandler}
-                type="button"
-                value={number}
-              >
-                {number}
-              </button>
-            );
-          }
-          return (
-            <button
-              className={styles.page_btn + " page_" + number}
-              onClick={changePageHandler}
-              type="button"
-              value={number}
-            >
-              {number}
-            </button>
-          );
-        })}
-      </div>
+          })}
+        </div>
+      )}
     </Fragment>
   );
 };

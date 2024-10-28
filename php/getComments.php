@@ -14,7 +14,11 @@ while($row = mysqli_fetch_array($commentsDB)){
     $commentsArrForObj["idRecipe"] = $row["id_recipe"];
     $commentsArrForObj["date"] = $row["date"];
     $commentsArrForObj["text"] = $row["text"];
-
+    $isLogged = false;
+    if($row["userIsLogin"] === '1'){
+        $isLogged = true;
+    }
+    $commentsArrForObj["isLogged"] = $isLogged;
     $obj = (object) $commentsArrForObj;
     array_push($comments, $obj);
     $commentsArrForObj = array();

@@ -12,7 +12,24 @@ code {
     monospace;
 }
 
-#root {
-  max-width: 1366px;
+.route_fragment {
+  max-width: 1336px;
+  padding: 0 15px;
   margin: 0 auto;
+}
+
+button[type="submit"] {
+  display: block;
+  margin: 3% auto;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 1%;
+  text-align: center;
+  background-color: #aabc03;
+  color: white;
+  transition: all 0.5s;
+}
+button[type="submit"]:hover {
+  background-color: #738000;
 }

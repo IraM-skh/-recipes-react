@@ -14,26 +14,28 @@ function App() {
   return (
     <Fragment>
       <Header />
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to="/recipes"></Redirect>
-        </Route>
-        <Route path="/recipes" exact>
-          <RecipesPage />
-        </Route>
-        <Route path="/pa" exact>
-          <PersonalAccountPage />
-        </Route>
-        <Route path="/create-recipe" exact>
-          <CreateRecipePage />
-        </Route>
-        <Route path="/recipe/:recipeId" exact>
-          <RecipePage></RecipePage>
-        </Route>
-        <Route path="/pa/:login" exact>
-          <PersonalAccountPage />
-        </Route>
-      </Switch>
+      <section className="route_fragment">
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to="/recipes"></Redirect>
+          </Route>
+          <Route path="/recipes" exact>
+            <RecipesPage />
+          </Route>
+          <Route path="/pa" exact>
+            <PersonalAccountPage />
+          </Route>
+          <Route path="/create-recipe" exact>
+            <CreateRecipePage />
+          </Route>
+          <Route path="/recipe/:recipeId" exact>
+            <RecipePage></RecipePage>
+          </Route>
+          <Route path="/pa/:login" exact>
+            <PersonalAccountPage />
+          </Route>
+        </Switch>
+      </section>
       <Footer />
     </Fragment>
   );

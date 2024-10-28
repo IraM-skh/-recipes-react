@@ -6,6 +6,7 @@ import {
   login as sendLogin,
   getIsUserLoggedIn,
 } from "../../store/slices/loginDataSlice";
+import styles from "../../pages/PersonalAccountPage.module.css";
 
 const NotLoggedIn: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -91,16 +92,21 @@ const NotLoggedIn: React.FC = () => {
       dispatch(getIsUserLoggedIn());
     }
   };
+
   const pieceLabelTextForLogin = isAccountExist ? " или e-mail" : "";
   const labelTextForLogin = `Логин${pieceLabelTextForLogin}`;
+
   return (
     <div className="not_logged_in_container">
-      <h2>Войдите в личный кабинет или зарегистрируйтесь</h2>
-      <form className="login_form" onSubmit={loginFormSubmitHandler}>
+      <h2 className={styles.header}>
+        Войдите в личный кабинет или зарегистрируйтесь
+      </h2>
+      <form className={styles.login_form} onSubmit={loginFormSubmitHandler}>
         <InputForLoginForm
           labelText={labelTextForLogin}
           inputName="login"
           setIsFormFilled={setIsFormFilled}
+          setFormErrorMessage={setFormErrorMessage}
         ></InputForLoginForm>
         {errorLogin && <p className="error">{errorLogin}</p>}
         {errorRegistrationLogin && (
@@ -111,6 +117,7 @@ const NotLoggedIn: React.FC = () => {
             labelText="E-mail"
             inputName="eMail"
             setIsFormFilled={setIsFormFilled}
+            setFormErrorMessage={setFormErrorMessage}
           ></InputForLoginForm>
         )}
         {!isAccountExist && errorRegistrationEMail && (
@@ -121,6 +128,7 @@ const NotLoggedIn: React.FC = () => {
           inputName="password"
           setPasswordValue={setPasswordValue}
           setIsFormFilled={setIsFormFilled}
+          setFormErrorMessage={setFormErrorMessage}
         ></InputForLoginForm>
         {!isAccountExist && (
           <InputForLoginForm
@@ -128,20 +136,27 @@ const NotLoggedIn: React.FC = () => {
             inputName="repeat_password"
             passwordValue={passwordValue}
             setIsFormFilled={setIsFormFilled}
+            setFormErrorMessage={setFormErrorMessage}
           ></InputForLoginForm>
         )}
 
-        <label>
+        <label className={styles.custom_checkbox}>
           <input type="checkbox" name="remember"></input>
           <span>Запомнить меня</span>
         </label>
-        <br></br>
+
         <button type="button" onClick={switchLoginOrRegistrationHandler}>
           {isAccountExist && <span>У меня нет аккаунта</span>}
           {!isAccountExist && <span>У меня есть аккаунт</span>}
         </button>
-        {!isFormFilled && <p className="error">{formErrorMessage}</p>}
-        {loadingError && <p className="error">{loadingError}</p>}
+        {!isFormFilled && (
+          <p className={styles.all_fields_error + ` error`}>
+            {formErrorMessage}
+          </p>
+        )}
+        {loadingError && (
+          <p className={styles.all_fields_error + ` error`}>{loadingError}</p>
+        )}
         <button type="submit">
           {isAccountExist && <span>Войти</span>}
           {!isAccountExist && <span>Зарегистироваться</span>}

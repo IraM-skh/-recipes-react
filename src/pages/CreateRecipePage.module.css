@@ -118,7 +118,15 @@
 .ingredient:last-of-type {
   border-bottom: none;
 }
+
 .tag_types_container {
+  padding: 2%;
+  border-bottom: 1px solid #aabc03;
+  margin-bottom: 2%;
+}
+.tag_types_container,
+.tag_diet_container,
+.tags_container {
   display: flex;
   column-gap: 2%;
 }
@@ -127,33 +135,29 @@ input[type="checkbox"] {
   display: none;
 }
 .custom_checkbox {
-  border: 1px solid #ccc;
+  border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 20px;
   display: flex;
 
   align-items: center;
-
+  background-color: rgba(0, 0, 0, 0.032);
   box-sizing: border-box;
   width: 100%;
   padding: 0.5rem 1rem;
+  transition: all 0.5s;
+}
+
+.custom_checkbox:hover {
+  background-color: #dbf3004b;
 }
 
 input[type="checkbox"]:checked + .custom_checkbox {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #aabc03;
+  color: white;
 }
+
 .checkbox_label {
   /* display: flex; */
   box-sizing: border-box;
-}
-
-button[type="submit"] {
-  display: block;
-  margin: 3% auto;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 1%;
-  text-align: center;
 }

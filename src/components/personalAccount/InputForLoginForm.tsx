@@ -6,6 +6,7 @@ type InputForLoginFormProps = {
   passwordValue?: string;
   setPasswordValue?: React.Dispatch<React.SetStateAction<string>>;
   setIsFormFilled: React.Dispatch<React.SetStateAction<boolean>>;
+  setFormErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
@@ -16,6 +17,10 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
     setInputErrorMessage(() => "");
     props.setIsFormFilled(() => true);
   };
+  const setFormFilledAndErrorMessage = () => {
+    props.setIsFormFilled(() => false);
+    props.setFormErrorMessage(() => "Заполните все поля корректно!");
+  };
   const inputBlurHandler: React.FocusEventHandler<HTMLInputElement> = (
     event
   ) => {
@@ -25,7 +30,7 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
         event.target.value.trim().length > 20
       ) {
         setIsInputCorrect(() => false);
-        props.setIsFormFilled(() => false);
+        setFormFilledAndErrorMessage();
         setInputErrorMessage(() => "Логин должен состоять из 4-20 символов");
       } else {
         resetErrorMessage();
@@ -37,7 +42,7 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
         /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/;
       if (!EMAIL_REGEXP.test(event.target.value.trim())) {
         setIsInputCorrect(() => false);
-        props.setIsFormFilled(() => false);
+        setFormFilledAndErrorMessage();
         setInputErrorMessage(() => "Введите корректный e-mail");
       } else {
         resetErrorMessage();
@@ -51,7 +56,7 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
         event.target.value.trim().length > 30
       ) {
         setIsInputCorrect(() => false);
-        props.setIsFormFilled(() => false);
+        setFormFilledAndErrorMessage();
         setInputErrorMessage(() => "Пароль должен состоять из 4-30 символов");
       } else {
         resetErrorMessage();
@@ -64,7 +69,7 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
     if (props.inputName === "repeat_password") {
       if (props.passwordValue !== event.target.value.trim()) {
         setIsInputCorrect(() => false);
-        props.setIsFormFilled(() => false);
+        setFormFilledAndErrorMessage();
         setInputErrorMessage(() => "Пароли не совпадают");
       } else {
         resetErrorMessage();

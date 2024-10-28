@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import CommentCard from "../recipes/CommentCard";
 import { Comments } from "../../interfacesAndTypesTs/comments";
 import { nameFolderOnServer } from "../../App";
+import styles from "../../pages/PersonalAccountPage.module.css";
 type LoggedInProps = {
   loginFromCookie: string;
   loginFromUrl: string | undefined;
@@ -48,16 +49,22 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
       {userData.errorUserInfo && <p>Пользователь не найден</p>}
       {!userData.errorUserInfo && (
         <Fragment>
-          <div className="users_profile">
-            {isOwner && <p>{props.loginFromCookie}</p>}
-            {!isOwner && <p>{props.loginFromUrl}</p>}
+          <div className={styles.nickname_container}>
+            <div className="users_profile">
+              {isOwner && <p>{props.loginFromCookie}</p>}
+              {!isOwner && <p>{props.loginFromUrl}</p>}
+            </div>
+            {isOwner && (
+              <button
+                type="button"
+                onClick={logoutHandler}
+                className={styles.logout_btn}
+              >
+                Выйти из профиля
+              </button>
+            )}
           </div>
-          {isOwner && (
-            <button type="button" onClick={logoutHandler}>
-              Выйти из профиля
-            </button>
-          )}
-          <div className="favorite_recipes">
+          {/* <div className="favorite_recipes">
             <h2>Понравившиеся рецепты</h2>
             {!hasFavoriteRecipes && isOwner && (
               <p>Отмечайте рецепты, которые хотите сохранить.</p>
@@ -77,7 +84,7 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
                   </div>
                 );
               })}
-          </div>
+          </div> */}
           <div className="own_recipes">
             <h2>Ваши рецепты</h2>
             {!hasOwnRecipes && isOwner && (
@@ -89,10 +96,14 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
             {hasOwnRecipes &&
               userData.ownRecipes?.map((recipe) => {
                 return (
-                  <div>
+                  <div className={styles.recipe_container}>
                     <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
-                    <div className="resipe_info">
-                      <img src={recipe.imgUrl}></img>
+                    <div className={styles.resipe_info}>
+                      {recipe.imgUrl && (
+                        <div className={styles.img_container}>
+                          <img src={recipe.imgUrl}></img>
+                        </div>
+                      )}
                       <p>{recipe.description}</p>
                     </div>
                   </div>
@@ -112,7 +123,7 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
             {hasComments &&
               userData.ownComments?.map((comment) => {
                 return (
-                  <div>
+                  <div className={styles.comment_container}>
                     <Link to={`/recipe/${comment.idRecipe}`}>
                       <CommentCard comment={comment} />
                     </Link>

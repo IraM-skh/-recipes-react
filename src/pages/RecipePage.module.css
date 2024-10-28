@@ -8,21 +8,24 @@
 }
 .tags_type a {
   cursor: pointer;
-  border-radius: 2rem;
-  border: 2px rgb(54, 125, 255) solid;
-  background-color: rgba(54, 124, 255, 0.089);
+  border-radius: 20px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.032);
   padding: 0.5rem;
   box-sizing: border-box;
-  transition: 1s all;
+  transition: all 0.5s;
   text-decoration: none;
   color: black;
 }
 
 .tags_type a:hover {
-  border: 2px rgb(0, 128, 255) solid;
-  background-color: rgba(54, 124, 255, 0.153);
-  box-shadow: 0 0 5px rgb(0, 89, 255);
+  background-color: #dbf3004b;
 }
+.tags_type a:active {
+  background-color: #aabc03;
+  color: white;
+}
+
 .ingredients_list {
   list-style-type: none;
   padding: 0;
@@ -56,13 +59,24 @@
 }
 .comment_container {
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.445);
+  box-shadow: 0 0 10px #00000026;
   margin-bottom: 1rem;
 }
 .name_and_date_comment {
   margin: 0;
-  background-color: rgba(255, 225, 54, 0.314);
+  background-color: #c285001f;
   padding: 1rem;
+}
+.name_and_date_comment a {
+  text-decoration: none;
+  color: #0000009a;
+}
+.name_and_date_comment a:hover {
+  transition: all 0.5s;
+  color: #aabc03;
+}
+.author_comment {
+  color: #0000003f;
 }
 .date_comment {
   float: right;
@@ -76,18 +90,40 @@
   padding: 1rem 0;
 }
 .name_form_comment input {
-  padding: 0.5rem;
-  margin-left: 0.5rem;
-  border: 2px solid rgb(169, 169, 169);
+  border: none;
   border-radius: 5px;
+  border: 2px solid transparent;
+  background-color: rgba(0, 0, 0, 0.032);
+  padding: 1%;
+  min-width: 50%;
+  outline: none;
+  margin-left: 1%;
 }
 .text_form_comment textarea {
   margin-top: 0.5rem;
   display: block;
-  padding: 0.5rem;
   width: 100%;
   height: 4rem;
   box-sizing: border-box;
   border-radius: 5px;
-  border: 2px solid rgb(169, 169, 169);
+
+  border: 2px solid transparent;
+  background-color: rgba(0, 0, 0, 0.032);
+  padding: 1%;
+
+  outline: none;
+}
+
+.name_form_comment input:focus-visible,
+.text_form_comment textarea:focus-visible {
+  border: 2px solid #aabc03;
+}
+
+.name_form_comment input:focus,
+.text_form_comment textarea:focus {
+  border: 2px solid #aabc03;
+}
+.name_form_comment input:target,
+.text_form_comment textarea:target {
+  border: 2px solid #aabc03;
 }

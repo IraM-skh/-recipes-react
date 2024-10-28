@@ -1,0 +1,155 @@
+.login_form {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: 0 auto;
+}
+.header {
+  text-align: center;
+}
+.login_form label {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 3%;
+  align-items: center;
+}
+.login_form button {
+  padding: 3%;
+}
+
+.login_form button[type="button"] {
+  width: fit-content;
+  margin: 0 auto;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.032);
+  color: rgba(0, 0, 0, 0.322);
+}
+
+.login_form input[type="text"] {
+  border: none;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-color: rgba(0, 0, 0, 0.032);
+  padding: 2%;
+  min-width: 50%;
+  outline: none;
+}
+.login_form input[type="text"]:focus-visible {
+  border: 2px solid #aabc03;
+}
+.login_form input[type="text"]:focus {
+  border: 2px solid #aabc03;
+}
+.login_form input[type="text"]:target {
+  border: 2px solid #aabc03;
+}
+/* катостомный чекбокс */
+.custom_checkbox {
+  margin: 0 auto;
+}
+.custom_checkbox > span {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+.custom_checkbox > span::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border: 2px solid #aabc03;
+  border-radius: 5px;
+  margin-right: 0.2rem;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 50% 50%;
+  cursor: pointer;
+}
+
+/* стили для активного чекбокса (при нажатии на него) */
+.custom_checkbox > input:not(:disabled):active + span::before {
+  background-color: #dbf3004b;
+}
+
+/* стили для чекбокса, находящегося в фокусе */
+.custom_checkbox > input:focus + span::before {
+  box-shadow: 0 0 0 0.2rem #dbf3004b;
+}
+
+/* стили для чекбокса, находящегося в фокусе и не находящегося в состоянии checked */
+.custom_checkbox > input:focus:not(:checked) + span::before {
+  border-color: 2px solid #738000;
+}
+
+/* стили для чекбокса, находящегося в состоянии checked */
+.custom_checkbox > input:checked + span::before {
+  background-color: #aabc03;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+
+/* стили для чекбокса, находящегося в состоянии disabled */
+.custom_checkbox > input:disabled + span::before {
+  background-color: #e9ecef;
+}
+
+.all_fields_error {
+  margin-bottom: 0;
+  text-align: center;
+}
+.nickname_container {
+  display: flex;
+  justify-content: space-between;
+}
+.logout_btn {
+  border: none;
+  border-radius: 5px;
+  color: #0000009a;
+}
+
+.recipe_container {
+  box-shadow: 0 0 10px #00000026;
+  padding: 2%;
+  border-radius: 5px;
+  margin-bottom: 2%;
+}
+.recipe_container a {
+  display: inline-block;
+  text-decoration: none;
+  color: #0000009a;
+  transition: all 0.5s;
+  border-bottom: 2px solid #aabc03;
+  padding-bottom: 0.7%;
+}
+.recipe_container a:hover {
+  color: #aabc03;
+}
+.recipe_container p {
+  color: #785202c7;
+}
+.resipe_info {
+  display: flex;
+  align-items: center;
+  column-gap: 2%;
+  margin-top: 2%;
+}
+.img_container {
+  width: 14rem; /* Ширина области */
+  height: 10rem; /* Высота области */
+}
+.img_container img {
+  width: 100%; /* Ширина области */
+  height: 100%; /* Высота области */
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.comment_container a {
+  text-decoration: none;
+  color: #0000009a;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Comment } from "../../interfacesAndTypesTs/comments";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { sendRecipeComment } from "../../store/slices/specificRecipeSlice";
 import styles from "../../pages/RecipePage.module.css";
 
@@ -10,6 +10,7 @@ type NewCommentProps = {
 
 const NewComment: React.FC<NewCommentProps> = (props) => {
   const nameNewComment = React.createRef<HTMLInputElement>();
+  const isUserLoggedIn = useAppSelector((state) => state.userData.isLogin);
   const nameTextComment = React.createRef<HTMLTextAreaElement>();
   const dispatch = useAppDispatch();
 
@@ -58,10 +59,12 @@ const NewComment: React.FC<NewCommentProps> = (props) => {
 
   return (
     <form onSubmit={submitFormNewCommentHandler}>
-      <div className={styles.name_form_comment}>
-        <label htmlFor="name">Ваше имя:</label>
-        <input type="text" id="name" ref={nameNewComment} required />
-      </div>
+      {!isUserLoggedIn && (
+        <div className={styles.name_form_comment}>
+          <label htmlFor="name">Ваше имя:</label>
+          <input type="text" id="name" ref={nameNewComment} required />
+        </div>
+      )}
       <div className={styles.text_form_comment}>
         <label htmlFor="text">Ваш комментарий:</label>
         <textarea id="text" ref={nameTextComment} required></textarea>
