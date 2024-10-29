@@ -67,7 +67,7 @@ const RecipePage: React.FC = () => {
                   <span className={styles.ingridient}>
                     {Object.keys(ingridientObj)[0]}
                   </span>
-                  <span> </span>
+                  <span className={styles.ingredient_empty_space}></span>
                   <span className={styles.ingridient_quantity}>
                     {ingridientObj[Object.keys(ingridientObj)[0]].join(" ")}
                   </span>
@@ -81,7 +81,9 @@ const RecipePage: React.FC = () => {
               recipe.steps.map((step) => {
                 return (
                   <div className={styles.recipe_step}>
-                    <img src={step.src}></img>
+                    <div className={styles.recipe_step_img_container}>
+                      <img src={step.src}></img>
+                    </div>
                     <p>{step.stepsDescription}</p>
                   </div>
                 );

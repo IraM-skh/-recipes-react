@@ -97,7 +97,7 @@ const RecipesPage = () => {
   const pageNumberFromUrl = searchUrlParams.get("page");
   const sortTypes = searchUrlParams.get("sortTypes")?.split(",");
   const sortDiet = searchUrlParams.get("sortDiet")?.split(",");
-
+  //sorting
   let sortRecipesList: Recipes = [];
   if (sortTypes || sortDiet) {
     sortRecipesList.push(
@@ -152,46 +152,49 @@ const RecipesPage = () => {
 
   //pagination
   const pageBtnLimit = 5;
-  const limitRecipesOnPage = 2;
+  const limitRecipesOnPage = 10;
   let numberOfRec: number;
   if (sortRecipesList.length > 0) {
     numberOfRec = sortRecipesList.length;
   } else {
     numberOfRec = recipesList.length;
   }
+
   const paginationArrey: number[] = [];
 
   const numberOfPages =
     numberOfRec % limitRecipesOnPage
       ? Math.floor(numberOfRec / limitRecipesOnPage) + 1
       : numberOfRec / limitRecipesOnPage;
-  const pageNumber = pageNumberFromUrl ? Number(pageNumberFromUrl) : 1;
+  const currentPage = pageNumberFromUrl ? Number(pageNumberFromUrl) : 1;
 
   let startBntPagination = 0;
   let endBtnPagination = 0;
 
-  if (pageNumber <= Math.round(pageBtnLimit / 2)) {
+  if (currentPage <= Math.round(pageBtnLimit / 2)) {
     startBntPagination = 1;
-    endBtnPagination = pageBtnLimit;
-  } else if (pageNumber > numberOfPages - Math.round(pageBtnLimit / 2)) {
-    startBntPagination = numberOfPages - pageBtnLimit + 1;
-    endBtnPagination = numberOfPages;
+    endBtnPagination =
+      numberOfPages < pageBtnLimit ? numberOfPages : pageBtnLimit;
+  } else if (currentPage > numberOfPages - Math.round(pageBtnLimit / 2)) {
+    startBntPagination =
+      numberOfPages < pageBtnLimit ? 1 : numberOfPages - pageBtnLimit + 1;
+    endBtnPagination = numberOfPages; //numberOfPages
   } else {
-    startBntPagination = pageNumber - Math.round(pageBtnLimit / 2) + 1;
-    endBtnPagination = pageNumber + Math.round(pageBtnLimit / 2) - 1;
+    startBntPagination = currentPage - Math.round(pageBtnLimit / 2) + 1;
+    endBtnPagination = currentPage + Math.round(pageBtnLimit / 2) - 1;
   }
-
   for (let index = startBntPagination; index <= endBtnPagination; index++) {
     paginationArrey.push(index);
   }
+
   //final recipes list with pagination
   let finalRecipeList: Recipes = [];
   const getFinalRecipeList = (recipesList: Recipes) => {
-    const endInd = limitRecipesOnPage * pageNumber;
+    const endInd = limitRecipesOnPage * currentPage;
     const startInd = endInd - limitRecipesOnPage + 1;
     return recipesList.slice(startInd - 1, endInd);
   };
-  if (sortRecipesList.length > 0) {
+  if (sortTypes || sortDiet) {
     finalRecipeList = getFinalRecipeList(sortRecipesList);
   } else {
     finalRecipeList = getFinalRecipeList(recipesList);
@@ -204,7 +207,6 @@ const RecipesPage = () => {
           <div className={stylesCreateRecipe.tags_container}>
             {tags &&
               tags.type.map((type) => {
-                console.log(sortTypes && sortTypes.includes(type));
                 return (
                   <label
                     key={`type` + type}
@@ -269,17 +271,22 @@ const RecipesPage = () => {
       {statusLoadRecipes === "loading" && (
         <p className={styles.status_load}>{messageLoadRecipes}</p>
       )}
+
       {statusLoadRecipes !== "failed" &&
         finalRecipeList.map((recipe, index) => {
           return <RecipeCard key={recipe.id + index} recipe={recipe} />;
         })}
+      {statusLoadRecipes !== "failed" && finalRecipeList.length === 0 && (
+        <p className={styles.status_load}>Рецептов по запосу не найдено</p>
+      )}
       {statusLoadRecipes === "failed" && (
         <p className={styles.status_load}>{messageLoadRecipes}</p>
       )}
-      {statusLoadRecipes !== "failed" && (
+      {/*-------- pagination --------*/}
+      {statusLoadRecipes !== "failed" && finalRecipeList.length !== 0 && (
         <div className={styles.pagination_container}>
           {paginationArrey.map((number) => {
-            if (pageNumberFromUrl && number === Number(pageNumber)) {
+            if (pageNumberFromUrl && number === Number(currentPage)) {
               return (
                 <button
                   className={

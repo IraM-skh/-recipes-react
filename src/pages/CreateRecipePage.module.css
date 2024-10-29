@@ -120,7 +120,7 @@
 }
 
 .tag_types_container {
-  padding: 2%;
+  padding: 2% 0;
   border-bottom: 1px solid #aabc03;
   margin-bottom: 2%;
 }
