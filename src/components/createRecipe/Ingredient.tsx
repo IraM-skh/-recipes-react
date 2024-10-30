@@ -1,6 +1,7 @@
 import { DataForDeleteHandler } from "../../pages/CreateRecipePage";
 import { newRecipeSliceActions } from "../../store/slices/newRecipeSlice";
 import styles from "../../pages/CreateRecipePage.module.css";
+import { useAppSelector } from "../../hooks";
 
 type IngredientProps = {
   deleteIngredientFieldHandler: (
@@ -11,11 +12,16 @@ type IngredientProps = {
 };
 
 const Ingredient: React.FC<IngredientProps> = (props) => {
+  // state
+  const measurements = useAppSelector(
+    (state) => state.recipesDetails.measurements.measurements
+  );
+  // handlers
   const dataForDeleteHandler = {
     id: props.id,
     action: newRecipeSliceActions.removeIngredientField,
   };
-
+  // JSX
   return (
     <div className={styles.ingredient}>
       <input type="text" placeholder="ингредиент" name="ingredient"></input>
@@ -25,10 +31,9 @@ const Ingredient: React.FC<IngredientProps> = (props) => {
         name="ingredient_quantity"
       ></input>
       <select name="ingredient_measurement">
-        <option value="гр.">гр.</option>
-        <option value="ч.л.">ч.л.</option>
-        <option value="кг.">кг.</option>
-        <option value="по вкусу">по вкусу</option>
+        {measurements.map((measurement) => (
+          <option value={measurement}>{measurement}</option>
+        ))}
       </select>
       <button
         onClick={(_) =>

@@ -54,6 +54,7 @@
 .recipe_step_img_container {
   width: 16rem;
   height: 12rem;
+  flex: none;
 }
 .recipe_step img {
   width: 100%;
