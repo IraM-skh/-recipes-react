@@ -6,6 +6,7 @@ import CommentsList from "../components/recipes/CommentsList";
 import NewComment from "../components/recipes/NewComment";
 import styles from "./RecipePage.module.css";
 import { Link } from "react-router-dom";
+import NoImg from "../components/NoImg";
 
 const tagRender = (tags: string[], tagsType: string) => {
   return tags.map((tag, index) => {
@@ -45,9 +46,11 @@ const RecipePage: React.FC = () => {
       <Fragment>
         <div className="recipe_container">
           <h3 className={styles.recipe_title}>{recipe.title}</h3>
-          <p>
+          <p className={styles.recipe_autor}>
             Автор рецепта
-            <Link to={`/pa/${specificRecipeData.recipe?.author}`}></Link>
+            <Link to={`/pa/${specificRecipeData.recipe?.author}`}>
+              {specificRecipeData.recipe?.author}
+            </Link>
           </p>
           <div className={styles.tags_type + " tags_type"}>
             {tagRender(tagsType, "type")}
@@ -57,8 +60,8 @@ const RecipePage: React.FC = () => {
               {tagRender(tagsDiet, "diet")}
             </div>
           )}
-
-          <img src={recipe.imgUrl} alt={recipe.title}></img>
+          {!recipe.imgUrl && <NoImg />}
+          {recipe.imgUrl && <img src={recipe.imgUrl} alt={recipe.title}></img>}
           <h3>Ингредиенты</h3>
           <ul className={styles.ingredients_list}>
             {ingredients.map((ingridientObj, index) => {
@@ -82,7 +85,8 @@ const RecipePage: React.FC = () => {
                 return (
                   <div className={styles.recipe_step}>
                     <div className={styles.recipe_step_img_container}>
-                      <img src={step.src}></img>
+                      {!step.src && <NoImg />}
+                      {step.src && <img src={step.src}></img>}
                     </div>
                     <p>{step.stepsDescription}</p>
                   </div>

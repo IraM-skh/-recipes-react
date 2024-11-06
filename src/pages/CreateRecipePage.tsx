@@ -15,13 +15,16 @@ import {
   SpesificRecipeForSending,
   StepsForSending,
 } from "../interfacesAndTypesTs/recipesInterfaces";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getMeasurementsData,
   getTagsData,
 } from "../store/slices/recipesDetailsSlice";
 import styles from "./CreateRecipePage.module.css";
 import Tags from "../components/createRecipe/Tags";
+import { postHttp } from "../dataFromServer/httpRequest";
+import { nameFolderOnServer } from "../App";
+import { getIsUserLoggedIn } from "../store/slices/loginDataSlice";
 
 export type DataForDeleteHandler = {
   id: string;
@@ -48,12 +51,19 @@ const CreateRecipePage: React.FC = () => {
     ingredient_quantity: RadioNodeList | HTMLInputElement;
     ingredient_measurement: RadioNodeList | HTMLSelectElement;
     description: HTMLInputElement;
+    TagTypes: NodeListOf<HTMLInputElement>;
+    TagDiet: NodeListOf<HTMLInputElement>;
   };
   type FormStepFiedls = {
     [key: string]: HTMLInputElement;
   };
   type FormFiedls = FormInputAndSelectFiedls & FormStepFiedls;
-
+  type ValidateMessage = {
+    tagsError: string;
+    stepsError: string;
+    ingredientsError: string;
+    titleError: string;
+  };
   //-----get states and dispatch
   const dispatch = useAppDispatch();
   const {
@@ -61,15 +71,22 @@ const CreateRecipePage: React.FC = () => {
     mainImgSrs,
     IngredientFieldsId,
     sendNewRecipeResult,
+    sendNewPhotoResult,
     sendPhotoResultError,
     sendNewRecipeResultError,
   } = useAppSelector((state) => state.newRecipe);
   const { tags, measurements } = useAppSelector(
     (state) => state.recipesDetails
   );
+  const isUserLoggedIn = useAppSelector((state) => state.userData.isLogin);
   const tagTypes = tags.tags?.type;
   const tagDiet = tags.tags?.diet;
-
+  const [validateMessage, setValidateMessage] = useState<ValidateMessage>({
+    tagsError: "",
+    stepsError: "",
+    ingredientsError: "",
+    titleError: "",
+  });
   //-----work with element and node list
   const getValueOfElementOrNodeList = (
     element: RadioNodeList | HTMLInputElement | HTMLSelectElement
@@ -83,8 +100,12 @@ const CreateRecipePage: React.FC = () => {
     return element.value;
   };
 
-  //-----sending photo after load recioe
+  //-----sending photo after sucsess load recipe
   const formTest: React.MutableRefObject<HTMLFormElement | null> = useRef(null);
+
+  useEffect(() => {
+    dispatch(getIsUserLoggedIn());
+  }, []);
 
   useEffect(() => {
     if (
@@ -98,6 +119,48 @@ const CreateRecipePage: React.FC = () => {
     }
   }, [sendNewRecipeResult.id]);
 
+  useEffect(() => {
+    //-----clear form after sucsess load recipe photo
+    if (sendNewPhotoResult) {
+      const timerResetForm = setTimeout(() => {
+        dispatch(newRecipeSliceActions.clearStateFormFields());
+        clearTimeout(timerResetForm);
+      }, 5000);
+    }
+    //-----delete uploaded recipe if uploading photo caused error
+    if (
+      !sendNewPhotoResult !== null &&
+      !sendNewPhotoResult &&
+      sendNewRecipeResult.result &&
+      sendNewRecipeResult.id
+    ) {
+      postHttp(`../${nameFolderOnServer}/php/deleteNewRecipe.php`, {
+        method: "POST",
+        body: JSON.stringify(sendNewRecipeResult.id),
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      });
+    }
+  }, [sendNewPhotoResult]);
+
+  const clearValidateMessage = () => {
+    setValidateMessage(() => {
+      return {
+        tagsError: "",
+        stepsError: "",
+        ingredientsError: "",
+        titleError: "",
+      };
+    });
+  };
+
+  let formErrors = {
+    tagsError: "",
+    stepsError: "",
+    ingredientsError: "",
+    titleError: "",
+  };
   //-----Handlers
   const addFieldHandler = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -111,7 +174,24 @@ const CreateRecipePage: React.FC = () => {
   > = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-
+    clearValidateMessage();
+    formErrors = {
+      tagsError: "",
+      stepsError: "",
+      ingredientsError: "",
+      titleError: "",
+    };
+    //checked tags and diet
+    const checkedTypes = [...form.TagTypes].filter(
+      (el: HTMLInputElement) => el.checked
+    );
+    const checkedDiets = [...form.TagDiet].filter(
+      (el: HTMLInputElement) => el.checked
+    );
+    //validate empty tags
+    if (checkedTypes.length === 0 && checkedDiets.length === 0) {
+      formErrors.tagsError = "Выберите теги рецета.";
+    }
     //-steps
     const steps = recipeSteps.map((step): StepsForSending => {
       return {
@@ -119,6 +199,10 @@ const CreateRecipePage: React.FC = () => {
         stepText: form[step.id].value,
       };
     });
+    //validate empty steps
+    if (steps.length < 2) {
+      formErrors.stepsError = "Заполните хотябы 2 шага рецепта.";
+    }
     //-ingredients
     const ingredientsAtInput = getValueOfElementOrNodeList(form.ingredient);
     const ingredientQuantities = getValueOfElementOrNodeList(
@@ -152,16 +236,32 @@ const CreateRecipePage: React.FC = () => {
         });
       });
     }
-    //-data
+    //validate ingredients steps
+    if (
+      ingredients.filter((ingredient) => ingredient.ingredient === "").length >
+      0
+    ) {
+      formErrors.ingredientsError = "Заполните поля с ингредиентами";
+    }
+    if (form.recipeTitle.value === "") {
+      formErrors.titleError = "Заполните название рецепта";
+    }
+    //validate
+    const test = Object.values(formErrors).filter((message) => {
+      return message !== "";
+    });
+    setValidateMessage(() => formErrors);
+
+    if (test.length > 0) {
+      return;
+    }
+
+    //-fore data
     const dataFromUser: SpesificRecipeForSending = {
       title: form.recipeTitle.value,
       tags: {
-        type: [...form.TagTypes]
-          .filter((el) => el.checked)
-          .map((el) => el.value),
-        diet: [...form.TagDiet]
-          .filter((el) => el.checked)
-          .map((el) => el.value),
+        type: checkedTypes.map((el) => el.value),
+        diet: checkedDiets.map((el) => el.value),
       },
       ingredients,
       steps,
@@ -177,115 +277,123 @@ const CreateRecipePage: React.FC = () => {
   ) => {
     dispatch(data.action(data.id));
   };
-
+  const errors = Object.values(validateMessage).filter((message) => {
+    return message !== "";
+  });
   //-----JSX
   return (
     <section className={styles.create_recipe}>
       {tags.errorMessage && !measurements.errorMessage && (
         <p>{tags.errorMessage}</p>
       )}
+      {!isUserLoggedIn && <p>Войдите в профиль, чтобы добавить рецепт.</p>}
       {measurements.errorMessage && !tags.errorMessage && (
         <p>{measurements.errorMessage}</p>
       )}
       {tags.errorMessage && measurements.errorMessage && (
         <p>Ошибка загрузки данных. Попробуйте обновить страницу.</p>
       )}
-      {!(tags.errorMessage || measurements.errorMessage) && (
-        <form
-          onSubmit={createNewRecipeHandler}
-          ref={formTest}
-          className={styles.new_recipe_form}
-        >
-          <h3>Название рецепта</h3>
-          <input
-            placeholder="Название рецепта"
-            type="text"
-            name="recipeTitle"
-            className={styles.recipe_title}
-          ></input>
-          <h3>Главное фото и описание рецепта</h3>
-          <div className={styles.description_container}>
-            <ImagePreloader
-              id={mainImgSrs.id}
-              action={newRecipeSliceActions.setMainImgSrs}
-              imgSrc={mainImgSrs.imgSrc}
-              inputName="prev_main_picture_input"
-            />
-
-            <textarea name="description"></textarea>
-          </div>
-          <h3>Ингредиенты</h3>
-          <div className="ingredients_container">
-            {IngredientFieldsId.map((id, index) => (
-              <Ingredient
-                key={id}
-                id={id}
-                deleteIngredientFieldHandler={deleteFieldHandler}
+      {sendNewPhotoResult && <p>Рецепт отправлен!</p>}
+      {!(tags.errorMessage || measurements.errorMessage) &&
+        !sendNewPhotoResult && (
+          <form
+            onSubmit={createNewRecipeHandler}
+            ref={formTest}
+            className={styles.new_recipe_form}
+          >
+            <h3>Название рецепта</h3>
+            <input
+              placeholder="Название рецепта"
+              type="text"
+              name="recipeTitle"
+              className={styles.recipe_title}
+            ></input>
+            <h3>Главное фото и описание рецепта</h3>
+            <div className={styles.description_container}>
+              <ImagePreloader
+                id={mainImgSrs.id}
+                action={newRecipeSliceActions.setMainImgSrs}
+                imgSrc={mainImgSrs.imgSrc}
+                inputName="prev_main_picture_input"
               />
-            ))}
 
-            <button
-              className={styles.add_item_in_recipe + " add_ingredient"}
-              onClick={(_) =>
-                addFieldHandler(_, newRecipeSliceActions.addIngredientField)
-              }
-              type="button"
-            >
-              Добавить ингредиент
-            </button>
-          </div>
-          <h3>Шаги рецепта</h3>
-          <div className={styles.recipe_steps_container}>
-            {recipeSteps.map((step) => (
-              <RecipeStep
-                key={step.id}
-                id={step.id}
-                imgSrc={step.imgSrc}
-                deleteStepHandler={deleteFieldHandler}
-              />
-            ))}
+              <textarea name="description"></textarea>
+            </div>
+            <h3>Ингредиенты</h3>
+            <div className="ingredients_container">
+              {IngredientFieldsId.map((id, index) => (
+                <Ingredient
+                  key={id}
+                  id={id}
+                  deleteIngredientFieldHandler={deleteFieldHandler}
+                />
+              ))}
 
-            <button
-              className={styles.add_item_in_recipe + " add_step"}
-              onClick={(_) => addFieldHandler(_, newRecipeSliceActions.addStep)}
-              type="button"
-            >
-              Добавить шаг
-            </button>
-          </div>
-          <h3>Тэги рецепта</h3>
-          <div className="tags_container">
-            <div className={styles.tag_types_container}>
-              {tagTypes &&
-                tagTypes.map((tag: string, index: number) => (
-                  <Tags
-                    key={"TagTypes" + index}
-                    value={tag}
-                    inputName="TagTypes"
-                  />
-                ))}
+              <button
+                className={styles.add_item_in_recipe + " add_ingredient"}
+                onClick={(_) =>
+                  addFieldHandler(_, newRecipeSliceActions.addIngredientField)
+                }
+                type="button"
+              >
+                Добавить ингредиент
+              </button>
             </div>
-            <div className={styles.tag_diet_container}>
-              {tagDiet &&
-                tagDiet.map((tag: string, index: number) => (
-                  <Tags
-                    key={"TagDiet" + index}
-                    value={tag}
-                    inputName="TagDiet"
-                  />
-                ))}
+            <h3>Шаги рецепта</h3>
+            <div className={styles.recipe_steps_container}>
+              {recipeSteps.map((step) => (
+                <RecipeStep
+                  key={step.id}
+                  id={step.id}
+                  imgSrc={step.imgSrc}
+                  deleteStepHandler={deleteFieldHandler}
+                />
+              ))}
+
+              <button
+                className={styles.add_item_in_recipe + " add_step"}
+                onClick={(_) =>
+                  addFieldHandler(_, newRecipeSliceActions.addStep)
+                }
+                type="button"
+              >
+                Добавить шаг
+              </button>
             </div>
-          </div>
-          {sendNewRecipeResultError !== "" && (
-            <p className="error">{sendNewRecipeResultError}</p>
-          )}
-          {sendPhotoResultError !== "" && (
-            <p className="error">{sendPhotoResultError}</p>
-          )}
-          {sendNewRecipeResult.id && <p>{sendNewRecipeResult.id}</p>}
-          <button type="submit">Добавить рецепт</button>
-        </form>
-      )}
+            <h3>Тэги рецепта</h3>
+            <div className="tags_container">
+              <div className={styles.tag_types_container}>
+                {tagTypes &&
+                  tagTypes.map((tag: string, index: number) => (
+                    <Tags
+                      key={"TagTypes" + index}
+                      value={tag}
+                      inputName="TagTypes"
+                    />
+                  ))}
+              </div>
+              <div className={styles.tag_diet_container}>
+                {tagDiet &&
+                  tagDiet.map((tag: string, index: number) => (
+                    <Tags
+                      key={"TagDiet" + index}
+                      value={tag}
+                      inputName="TagDiet"
+                    />
+                  ))}
+              </div>
+            </div>
+            {sendNewRecipeResultError !== "" && (
+              <p className="error">{sendNewRecipeResultError}</p>
+            )}
+            {sendPhotoResultError !== "" && (
+              <p className="error">{sendPhotoResultError}</p>
+            )}
+            {errors.length > 0 &&
+              errors.map((error) => <p className="error">{error}</p>)}
+            <button type="submit">Добавить рецепт</button>
+          </form>
+        )}
     </section>
   );
 };

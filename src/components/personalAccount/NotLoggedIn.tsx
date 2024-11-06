@@ -22,7 +22,10 @@ const NotLoggedIn: React.FC = () => {
   const [isAccountExist, setIsAccountExist] = useState(true);
   const [isFormFilled, setIsFormFilled] = useState(true);
   const [formErrorMessage, setFormErrorMessage] = useState("");
-  const [passwordValue, setPasswordValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState({
+    pass: "",
+    repeatPass: "",
+  });
   const {
     errorLogin,
     errorRegistrationLogin,
@@ -135,6 +138,7 @@ const NotLoggedIn: React.FC = () => {
             labelText="Повторите пароль"
             inputName="repeat_password"
             passwordValue={passwordValue}
+            setPasswordValue={setPasswordValue}
             setIsFormFilled={setIsFormFilled}
             setFormErrorMessage={setFormErrorMessage}
           ></InputForLoginForm>

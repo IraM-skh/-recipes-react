@@ -17,13 +17,13 @@ $sendingNewRecipeResult = [];
         if ($error == UPLOAD_ERR_OK){
             $name =mt_rand(0, 100000) . $main["name"];
             $img_src = $folderDir . $name;
-            
+            $img_src_DB = "../recipes/img/" . $name;
 
 
 
             array_push($sendingNewRecipeResult,move_uploaded_file($main["tmp_name"], $img_src));
 
-            $mysql->query("UPDATE `recipes` SET `img_url`='$img_src' WHERE `id`='$rec_id'");
+            $mysql->query("UPDATE `recipes` SET `img_url`='$img_src_DB' WHERE `id`='$rec_id'");
         }
         
         
@@ -33,11 +33,11 @@ $sendingNewRecipeResult = [];
                 $tmp_name = $_FILES["recipe_step_img"]["tmp_name"][$key];
                 $name =mt_rand(0, 100000) . $_FILES["recipe_step_img"]["name"][$key];
                 $img_src = $folderDir . $name;
-                
+                 $img_src_DB = "../recipes/img/" . $name;
                 
 
                 array_push($sendingNewRecipeResult,move_uploaded_file($tmp_name, $img_src));
-                $mysql->query("UPDATE `recipe_steps` SET `img_src`='$img_src' WHERE `id_recipe`='$rec_id' AND `number_of_step`='$key'");
+                $mysql->query("UPDATE `recipe_steps` SET `img_src`='$img_src_DB' WHERE `id_recipe`='$rec_id' AND `number_of_step`='$key'");
             }
 
         }

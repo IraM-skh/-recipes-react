@@ -52,7 +52,7 @@ if($result){
     foreach ($steps as &$valueObj){
         $number_of_step = $valueObj->id;
         $step_description =$valueObj->stepText;
-        $mysql->query(query: "INSERT INTO `recipe_steps`(`id`, `id_recipe`, `number_of_step`, `img_src`, `step_description`) VALUES (NULL,'$idNewRecipe','$number_of_step','','$step_description')");
+        $mysql->query( "INSERT INTO `recipe_steps`(`id`, `id_recipe`, `number_of_step`, `img_src`, `step_description`) VALUES (NULL,'$idNewRecipe','$number_of_step','','$step_description')");
     }
 
     //добавляем ингредиенты рецепта 
@@ -60,7 +60,7 @@ if($result){
         $ingredient = $valueObj->ingredient;
         $quantitie = $valueObj->ingredientQuantitie;
         $measurement = $valueObj->ingredientMeasurement;
-        $mysql->query(query: "INSERT INTO `ingredients`(`id_recipe`, `name`, `quantity`, `measurement`) VALUES ('$idNewRecipe','$ingredient','$quantitie','$measurement')");
+        $mysql->query("INSERT INTO `ingredients`(`id_recipe`, `name`, `quantity`, `measurement`) VALUES ('$idNewRecipe','$ingredient','$quantitie','$measurement')");
     }
 
 

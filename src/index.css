@@ -33,3 +33,23 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #738000;
 }
+
+.no_img_text {
+  text-align: center;
+  color: #dddddd;
+  font-weight: 500;
+}
+.no_img_svg {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+  align-self: center;
+}
+.no_img_container {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  justify-content: center;
+  margin: 0;
+  width: 300px;
+}

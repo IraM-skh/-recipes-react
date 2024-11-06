@@ -26,7 +26,6 @@ const RecipeStep: React.FC<RecipeStepProps> = (props) => {
         id={props.id}
         imgSrc={props.imgSrc}
       ></ImagePreloader>
-      {/* <input type="text" name={props.id}></input> */}
       <textarea name={props.id}></textarea>
       <button
         onClick={(_) => props.deleteStepHandler(_, dataForDeleteStepHandler)}

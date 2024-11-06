@@ -51,6 +51,10 @@
   margin: 0 1rem;
   border-bottom: 2px solid #aabc03;
 }
+.recipe_step:last-of-type {
+  border-bottom: none;
+}
+
 .recipe_step_img_container {
   width: 16rem;
   height: 12rem;
@@ -135,4 +139,11 @@
 .name_form_comment input:target,
 .text_form_comment textarea:target {
   border: 2px solid #aabc03;
+}
+
+.recipe_autor a {
+  text-decoration: none;
+  color: black;
+  padding-left: 15px;
+  font-weight: 500;
 }

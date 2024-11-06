@@ -35,6 +35,7 @@ export type NewRecipeSlice = {
   message: string | null;
   imgFile: any;
   sendNewRecipeResult: sendingNewRecipeResult;
+  sendNewPhotoResult: boolean | null;
   sendNewRecipeResultError: string;
   sendPhotoResultError: string;
 };
@@ -64,6 +65,7 @@ const initialState: NewRecipeSlice = {
   },
   sendNewRecipeResultError: "",
   sendPhotoResultError: "",
+  sendNewPhotoResult: null,
 };
 
 //asyncthunks
@@ -142,6 +144,7 @@ const newRecipeSlice = createSlice({
         (idField) => idField !== action.payload
       );
     },
+    clearStateFormFields: () => initialState,
 
     setStepSrc(state, action: PayloadAction<ImageSrc>) {
       const step = state.recipeSteps.find(
@@ -176,6 +179,7 @@ const newRecipeSlice = createSlice({
       )
       .addCase(sendNewRecipePhoto.fulfilled, (state, action) => {
         state.sendNewRecipeResult.result = action.payload;
+        state.sendNewPhotoResult = action.payload;
         if (action.payload === true) {
           state.sendPhotoResultError = "";
         } else {
@@ -185,6 +189,7 @@ const newRecipeSlice = createSlice({
       .addCase(
         sendNewRecipePhoto.rejected,
         (state, action: PayloadAction<string | undefined>) => {
+          state.sendNewPhotoResult = false;
           if (typeof action.payload === "string") {
             state.sendPhotoResultError = action.payload;
           }

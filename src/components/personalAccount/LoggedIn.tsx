@@ -10,6 +10,7 @@ import CommentCard from "../recipes/CommentCard";
 import { Comments } from "../../interfacesAndTypesTs/comments";
 import { nameFolderOnServer } from "../../App";
 import styles from "../../pages/PersonalAccountPage.module.css";
+import NoImg from "../NoImg";
 type LoggedInProps = {
   loginFromCookie: string;
   loginFromUrl: string | undefined;
@@ -64,27 +65,6 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
               </button>
             )}
           </div>
-          {/* <div className="favorite_recipes">
-            <h2>Понравившиеся рецепты</h2>
-            {!hasFavoriteRecipes && isOwner && (
-              <p>Отмечайте рецепты, которые хотите сохранить.</p>
-            )}
-            {!hasFavoriteRecipes && !isOwner && (
-              <p>Пользователь не отмечал понравившиеся рецепты.</p>
-            )}
-            {hasFavoriteRecipes &&
-              userData.favoriteRecipes?.map((recipe) => {
-                return (
-                  <div>
-                    <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
-                    <div className="resipe_info">
-                      <img src={recipe.imgUrl}></img>
-                      <p>{recipe.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-          </div> */}
           <div className="own_recipes">
             <h2>Ваши рецепты</h2>
             {!hasOwnRecipes && isOwner && (
@@ -99,6 +79,7 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
                   <div className={styles.recipe_container}>
                     <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
                     <div className={styles.resipe_info}>
+                      {!recipe.imgUrl && <NoImg />}
                       {recipe.imgUrl && (
                         <div className={styles.img_container}>
                           <img src={recipe.imgUrl}></img>

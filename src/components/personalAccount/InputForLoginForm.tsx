@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type InputForLoginFormProps = {
   labelText: string;
   inputName: string;
-  passwordValue?: string;
-  setPasswordValue?: React.Dispatch<React.SetStateAction<string>>;
+  passwordValue?: {
+    pass: string;
+    repeatPass: string;
+  };
+
+  setPasswordValue?: React.Dispatch<
+    React.SetStateAction<{
+      pass: string;
+      repeatPass: string;
+    }>
+  >;
   setIsFormFilled: React.Dispatch<React.SetStateAction<boolean>>;
   setFormErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -12,6 +21,13 @@ type InputForLoginFormProps = {
 const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
   const [isInputCorrect, setIsInputCorrect] = useState(true);
   const [inputErrorMessage, setInputErrorMessage] = useState("");
+  useEffect(() => {
+    if (props.inputName === "repeat_password") {
+      if (props.passwordValue?.pass === props.passwordValue?.repeatPass) {
+        resetErrorMessage();
+      }
+    }
+  }, [props.passwordValue?.pass, props.passwordValue?.repeatPass]);
   const resetErrorMessage = () => {
     setIsInputCorrect(() => true);
     setInputErrorMessage(() => "");
@@ -62,12 +78,22 @@ const InputForLoginForm: React.FC<InputForLoginFormProps> = (props) => {
         resetErrorMessage();
       }
       if (props.setPasswordValue && event.target.value.trim()) {
-        props.setPasswordValue(event.target.value.trim());
+        props.setPasswordValue((prev) => {
+          prev.pass = event.target.value.trim();
+          return prev;
+        });
       }
       return;
     }
     if (props.inputName === "repeat_password") {
-      if (props.passwordValue !== event.target.value.trim()) {
+      if (props.setPasswordValue && event.target.value.trim()) {
+        props.setPasswordValue((prev) => {
+          prev.repeatPass = event.target.value.trim();
+          return prev;
+        });
+      }
+
+      if (props.passwordValue?.pass !== event.target.value.trim()) {
         setIsInputCorrect(() => false);
         setFormFilledAndErrorMessage();
         setInputErrorMessage(() => "Пароли не совпадают");

@@ -6,7 +6,7 @@ $json = json_decode(file_get_contents("php://input"));
 $login = $json->login;
 $password = md5($json->password);
 $remember = $json->remember;
-$userDB = $mysql->query("SELECT * FROM `users` WHERE `login`='$login' AND `password`='$password'");
+$userDB = $mysql->query("SELECT * FROM `users_recipes` WHERE `login`='$login' AND `password`='$password'");
 $row_cnt = mysqli_num_rows($userDB);
 $result = false;
 if ($row_cnt != 0){

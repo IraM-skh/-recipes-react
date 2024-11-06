@@ -2,6 +2,7 @@ import React from "react";
 import { IRecipesData } from "../../interfacesAndTypesTs/recipesInterfaces";
 import { Link } from "react-router-dom";
 import styles from "../../pages/RecipesPage.module.css";
+import NoImg from "../NoImg";
 
 interface IRecipeCardProps {
   recipe: IRecipesData;
@@ -23,7 +24,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
   //tags diet
   const isExistDietTags: boolean = typeof recipe.tags.diet !== "undefined";
   let tagsDietList: string = "";
-  if (typeof recipe.tags.diet !== "undefined") {
+  if (typeof recipe.tags.diet !== "undefined" && recipe.tags.diet.length > 0) {
     tagsDietList = onlyFirstLatterToUpperCase(recipe.tags.diet.join(", "));
   }
 
@@ -33,8 +34,9 @@ const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
         <h3>{recipe.title}</h3>
       </Link>
       <div className={styles.description_container}>
-        <img src={recipe.imgUrl} alt={recipe.title}></img>
-        <p>Какое-то описание рецепта</p>
+        {!recipe.imgUrl && <NoImg />}
+        {recipe.imgUrl && <img src={recipe.imgUrl} alt={recipe.title}></img>}
+        <p>{recipe.description}</p>
       </div>
       <p className={styles.ingredients_list}>Ингредиенты: {ingredientsList}</p>
       <p className={styles.tags_type_list}>Тип блюда: {tagsTypeList}</p>
