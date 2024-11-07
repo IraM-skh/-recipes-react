@@ -35,7 +35,11 @@ const RecipeCard: React.FC<IRecipeCardProps> = (props) => {
       </Link>
       <div className={styles.description_container}>
         {!recipe.imgUrl && <NoImg />}
-        {recipe.imgUrl && <img src={recipe.imgUrl} alt={recipe.title}></img>}
+        {recipe.imgUrl && (
+          <div className={styles.description_img_container}>
+            <img src={recipe.imgUrl} alt={recipe.title}></img>
+          </div>
+        )}
         <p>{recipe.description}</p>
       </div>
       <p className={styles.ingredients_list}>Ингредиенты: {ingredientsList}</p>

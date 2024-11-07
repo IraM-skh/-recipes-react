@@ -31,8 +31,8 @@
   background-color: rgba(0, 0, 0, 0.032);
 }
 .image_preloader__img_container {
-  width: 300px;
-  height: 300px;
+  width: 20rem;
+  height: 16rem;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -41,6 +41,8 @@
 
 .image_preloader img {
   width: 100%;
+  height: 100%;
+  border-radius: 5px;
   object-fit: cover;
 }
 .add_item_in_recipe {
@@ -161,4 +163,8 @@ input[type="checkbox"]:checked + .custom_checkbox {
 .checkbox_label {
   /* display: flex; */
   box-sizing: border-box;
+}
+
+.success_message {
+  text-align: center;
 }

@@ -4,7 +4,7 @@ require "./sessionСheck.php";
 $mysql = new mysqli($dbDataHost, $dbDataUser, $dbDataPassword, $dbDataName);
 $id = json_decode(file_get_contents("php://input"));
 
-// $mysql->query("DELETE FROM `recipes` WHERE `id`='$id'");
+$mysql->query("DELETE FROM `recipes` WHERE `id`='$id'");
 
 $userDataDB = $mysql->query("SELECT * FROM `users_data`");
 

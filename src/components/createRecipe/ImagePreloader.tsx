@@ -50,9 +50,11 @@ const ImagePreloader: React.FC<ImagePreloaderProps> = (props) => {
   return (
     <div className={styles.image_preloader}>
       {!props.imgSrc && <NoImg />}
-      <div className={styles.image_preloader__img_container}>
-        {props.imgSrc && <img src={props.imgSrc}></img>}
-      </div>
+      {props.imgSrc && (
+        <div className={styles.image_preloader__img_container}>
+          <img src={props.imgSrc}></img>
+        </div>
+      )}
       <label
         htmlFor={props.inputName + props.id}
         className={styles.file_uploader__custom_button}

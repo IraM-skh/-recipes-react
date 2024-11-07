@@ -189,7 +189,7 @@ const CreateRecipePage: React.FC = () => {
       (el: HTMLInputElement) => el.checked
     );
     //validate empty tags
-    if (checkedTypes.length === 0 && checkedDiets.length === 0) {
+    if (checkedTypes.length === 0 || checkedDiets.length === 0) {
       formErrors.tagsError = "Выберите теги рецета.";
     }
     //-steps
@@ -202,6 +202,9 @@ const CreateRecipePage: React.FC = () => {
     //validate empty steps
     if (steps.length < 2) {
       formErrors.stepsError = "Заполните хотябы 2 шага рецепта.";
+    }
+    if (steps.filter((step) => step.stepText === "").length > 0) {
+      formErrors.stepsError = "Заполните описание всех шагов.";
     }
     //-ingredients
     const ingredientsAtInput = getValueOfElementOrNodeList(form.ingredient);
@@ -217,11 +220,19 @@ const CreateRecipePage: React.FC = () => {
       typeof ingredientQuantities === "string" &&
       typeof ingredientMeasurements === "string"
     ) {
-      ingredients.push({
-        ingredient: ingredientsAtInput,
-        ingredientQuantitie: ingredientQuantities,
-        ingredientMeasurement: ingredientMeasurements,
-      });
+      if (ingredientMeasurements === "по вкусу") {
+        ingredients.push({
+          ingredient: ingredientsAtInput,
+          ingredientQuantitie: "",
+          ingredientMeasurement: ingredientMeasurements,
+        });
+      } else {
+        ingredients.push({
+          ingredient: ingredientsAtInput,
+          ingredientQuantitie: ingredientQuantities,
+          ingredientMeasurement: ingredientMeasurements,
+        });
+      }
     }
     if (
       typeof ingredientsAtInput !== "string" &&
@@ -229,11 +240,19 @@ const CreateRecipePage: React.FC = () => {
       typeof ingredientMeasurements !== "string"
     ) {
       ingredientsAtInput.forEach((ingredient, index) => {
-        ingredients.push({
-          ingredient,
-          ingredientQuantitie: ingredientQuantities[index],
-          ingredientMeasurement: ingredientMeasurements[index],
-        });
+        if (ingredientMeasurements[index] === "по вкусу") {
+          ingredients.push({
+            ingredient,
+            ingredientQuantitie: "",
+            ingredientMeasurement: ingredientMeasurements[index],
+          });
+        } else {
+          ingredients.push({
+            ingredient,
+            ingredientQuantitie: ingredientQuantities[index],
+            ingredientMeasurement: ingredientMeasurements[index],
+          });
+        }
       });
     }
     //validate ingredients steps
@@ -284,18 +303,25 @@ const CreateRecipePage: React.FC = () => {
   return (
     <section className={styles.create_recipe}>
       {tags.errorMessage && !measurements.errorMessage && (
-        <p>{tags.errorMessage}</p>
+        <p className="error">{tags.errorMessage}</p>
       )}
-      {!isUserLoggedIn && <p>Войдите в профиль, чтобы добавить рецепт.</p>}
+      {!isUserLoggedIn && (
+        <p className="error">Войдите в профиль, чтобы добавить рецепт.</p>
+      )}
       {measurements.errorMessage && !tags.errorMessage && (
-        <p>{measurements.errorMessage}</p>
+        <p className="error">{measurements.errorMessage}</p>
       )}
       {tags.errorMessage && measurements.errorMessage && (
-        <p>Ошибка загрузки данных. Попробуйте обновить страницу.</p>
+        <p className="error">
+          Ошибка загрузки данных. Попробуйте обновить страницу.
+        </p>
       )}
-      {sendNewPhotoResult && <p>Рецепт отправлен!</p>}
+      {sendNewPhotoResult && (
+        <p className={styles.success_message}>Рецепт отправлен!</p>
+      )}
       {!(tags.errorMessage || measurements.errorMessage) &&
-        !sendNewPhotoResult && (
+        !sendNewPhotoResult &&
+        isUserLoggedIn && (
           <form
             onSubmit={createNewRecipeHandler}
             ref={formTest}

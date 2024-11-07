@@ -60,8 +60,17 @@ const RecipePage: React.FC = () => {
               {tagRender(tagsDiet, "diet")}
             </div>
           )}
-          {!recipe.imgUrl && <NoImg />}
-          {recipe.imgUrl && <img src={recipe.imgUrl} alt={recipe.title}></img>}
+          <div className={styles.description_container}>
+            {!recipe.imgUrl && <NoImg />}
+            {recipe.imgUrl && (
+              <div className={styles.description_img_container}>
+                <img src={recipe.imgUrl} alt={recipe.title}></img>
+              </div>
+            )}
+            <div>
+              <p>{recipe.description}</p>
+            </div>
+          </div>
           <h3>Ингредиенты</h3>
           <ul className={styles.ingredients_list}>
             {ingredients.map((ingridientObj, index) => {
@@ -103,7 +112,7 @@ const RecipePage: React.FC = () => {
       </Fragment>
     );
   } else {
-    return <p>{specificRecipeData.status}</p>;
+    return <p className="error">{specificRecipeData.status}</p>;
   }
 };
 

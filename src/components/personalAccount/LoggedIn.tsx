@@ -47,7 +47,9 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
   };
   return (
     <div>
-      {userData.errorUserInfo && <p>Пользователь не найден</p>}
+      {userData.errorUserInfo && (
+        <p className="error">Пользователь не найден</p>
+      )}
       {!userData.errorUserInfo && (
         <Fragment>
           <div className={styles.nickname_container}>
