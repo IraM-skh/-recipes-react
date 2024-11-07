@@ -52,6 +52,7 @@ button[type="submit"]:hover {
   margin: 0;
   height: 16rem;
   width: 20rem;
+  flex: none;
 }
 .error {
   text-align: center;

@@ -141,6 +141,7 @@
 .img_container {
   width: 20rem;
   height: 16rem;
+  flex: none;
 }
 .img_container img {
   width: 100%;
