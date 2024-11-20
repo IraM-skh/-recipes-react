@@ -44,7 +44,7 @@ const RecipePage: React.FC = () => {
 
     return (
       <Fragment>
-        <div className="recipe_container">
+        <div className={styles.recipe_container}>
           <h3 className={styles.recipe_title}>{recipe.title}</h3>
           <p className={styles.recipe_autor}>
             Автор рецепта
@@ -103,7 +103,7 @@ const RecipePage: React.FC = () => {
               })}
           </div>
         </div>
-        <h3>Комментарии</h3>
+        <h3 className={styles.comments_header}>Комментарии</h3>
         <div className={styles.comments_container}>
           <CommentsList recipeId={recipeId}></CommentsList>
 

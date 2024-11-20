@@ -46,7 +46,7 @@ const LoggedIn: React.FC<LoggedInProps> = (props) => {
     dispatch(userDataSliceActions.updateLoginStatus());
   };
   return (
-    <div>
+    <div className={styles.account_info}>
       {userData.errorUserInfo && (
         <p className="error">Пользователь не найден</p>
       )}

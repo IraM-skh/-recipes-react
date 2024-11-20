@@ -336,13 +336,16 @@ const CreateRecipePage: React.FC = () => {
             ></input>
             <h3>Главное фото и описание рецепта</h3>
             <div className={styles.description_container}>
-              <ImagePreloader
-                id={mainImgSrs.id}
-                action={newRecipeSliceActions.setMainImgSrs}
-                imgSrc={mainImgSrs.imgSrc}
-                inputName="prev_main_picture_input"
-              />
-
+              <div className={styles.preloader_external_container}>
+                <div className={styles.preloader_interior_container}>
+                  <ImagePreloader
+                    id={mainImgSrs.id}
+                    action={newRecipeSliceActions.setMainImgSrs}
+                    imgSrc={mainImgSrs.imgSrc}
+                    inputName="prev_main_picture_input"
+                  />
+                </div>
+              </div>
               <textarea name="description"></textarea>
             </div>
             <h3>Ингредиенты</h3>

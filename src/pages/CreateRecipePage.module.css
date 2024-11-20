@@ -1,3 +1,9 @@
+.create_recipe select {
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.032);
+}
+
 .create_recipe input[type="text"] {
   font: inherit;
   border-radius: 5px;
@@ -89,7 +95,7 @@
   cursor: pointer;
   align-self: center;
   color: #c28400;
-  border: 2px solid rgba(0, 0, 0, 0.032);
+  border: 1px solid rgba(0, 0, 0, 0.032);
   text-shadow: 0px 0px 4px #c285001f;
   border-radius: 5px;
   padding: 1%;
@@ -132,6 +138,8 @@
 .tags_container {
   display: flex;
   column-gap: 2%;
+  row-gap: 5px;
+  flex-wrap: wrap;
 }
 
 input[type="checkbox"] {
@@ -167,4 +175,109 @@ input[type="checkbox"]:checked + .custom_checkbox {
 
 .success_message {
   text-align: center;
+}
+
+@media (max-width: 870px) {
+  .tags_container {
+    justify-content: center;
+  }
+  .preloader_interior_container {
+    width: 16rem;
+  }
+}
+@media (max-width: 800px) {
+  .recipe_step {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    justify-items: center;
+  }
+  .new_recipe_form textarea {
+    box-sizing: border-box;
+    height: 5rem;
+  }
+  .recipe_step button {
+    box-sizing: border-box;
+    grid-column-start: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    padding: 8px;
+  }
+  .preloader_external_container {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.032);
+    border-radius: 5px;
+    padding-bottom: 0.7rem;
+  }
+
+  .preloader_interior_container {
+    margin: 0 auto;
+  }
+  .image_preloader {
+    background-color: transparent;
+  }
+
+  .description_container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ingredient {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 2fr 1fr auto;
+    grid-template-rows: auto auto;
+    justify-items: start;
+  }
+  .ingredient button {
+    grid-row-start: 1;
+    grid-row-end: -1;
+    grid-column-start: 3;
+    padding: 8px;
+  }
+  .create_recipe input[name="ingredient"],
+  .create_recipe input[name="ingredient_quantity"] {
+    width: 100%;
+    grid-column-start: 1;
+    grid-column-end: -2;
+  }
+  .create_recipe input[name="ingredient_quantity"] {
+    grid-column-end: 2;
+  }
+  .create_recipe input[type="text"] {
+    padding: 0.7rem;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 600px) {
+  .new_recipe_form button[type="submit"] {
+    padding: 2%;
+  }
+  .add_item_in_recipe {
+    padding: 2%;
+  }
+}
+
+@media (max-width: 425px) {
+  .recipe_step button,
+  .ingredient button {
+    padding: 4px;
+  }
+  .create_recipe h3 {
+    margin: 1em;
+  }
+  .description_container,
+  .create_recipe input[name="recipeTitle"] {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+  }
+  .ingredient,
+  .recipe_step,
+  .tag_diet_container,
+  .tag_types_container {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
 }

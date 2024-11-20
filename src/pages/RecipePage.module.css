@@ -5,6 +5,8 @@
   display: flex;
   column-gap: 0.5rem;
   margin-bottom: 0.7rem;
+  flex-wrap: wrap;
+  row-gap: 0.3rem;
 }
 .tags_type a {
   cursor: pointer;
@@ -41,6 +43,7 @@
   background-image: url(../../picForStyles/border_picture_03.png);
   background-size: 20%;
   background-position-y: 5px;
+  background-repeat: repeat-x;
 }
 
 .recipe_step {
@@ -155,4 +158,57 @@
 .description_container {
   display: flex;
   column-gap: 0.5rem;
+}
+
+@media (max-width: 870px) {
+  .recipe_step_img_container,
+  .description_img_container {
+    height: 12rem;
+    width: 16rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .recipe_step {
+    flex-direction: column;
+  }
+  .description_img_container {
+    margin: 0 auto;
+  }
+  .recipe_step p {
+    margin-bottom: 0;
+  }
+  .description_container {
+    flex-direction: column;
+  }
+  .description_container p {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .recipe_step {
+    margin: 0;
+  }
+  .comments_container button[type="submit"] {
+    padding: 2%;
+  }
+}
+
+@media (max-width: 600px) {
+  .tags_type {
+    justify-content: center;
+  }
+  .description_container p {
+    margin: 1em;
+  }
+  .recipe_container h3 {
+    margin: 1em;
+  }
+  .recipe_step p {
+    margin: 1em 1em 0 1em;
+  }
+  .comments_header {
+    margin: 1em;
+  }
 }

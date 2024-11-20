@@ -79,3 +79,33 @@
   text-align: center;
   margin: 2rem 0;
 }
+
+@media (max-width: 870px) {
+  .description_img_container {
+    width: 16rem;
+    height: 12rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .page_btn {
+    font-size: 1.1rem;
+    padding: 1.5% 1.8%;
+  }
+  .description_container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 425px) {
+  .pagination_container {
+    gap: 2%;
+  }
+  .filter_btn_container {
+    margin-top: 0.5rem;
+  }
+  .recipe_card {
+    border-radius: 5px;
+  }
+}

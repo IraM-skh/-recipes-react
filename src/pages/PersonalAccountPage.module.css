@@ -154,3 +154,30 @@
   text-decoration: none;
   color: #0000009a;
 }
+@media (max-width: 600px) {
+  .login_form {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .resipe_info {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 425px) {
+  .recipe_container {
+    border-radius: 0;
+  }
+  .comment_container {
+    padding: 0.7em;
+  }
+  .nickname_container {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+  }
+  .account_info h2 {
+    margin: 1rem;
+  }
+}

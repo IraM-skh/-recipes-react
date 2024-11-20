@@ -48,3 +48,63 @@
 .header_menuLinks .nav_link_active {
   color: #c28400;
 }
+
+@media (max-width: 1800px) {
+  .header_menuLinks {
+    background-size: 120px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .header_menuLinks {
+    background-size: 100px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .header_menuLinks {
+    margin: 0.7rem 0;
+  }
+  .header_menuLinks a {
+    margin: 0 0.5rem 0.5rem 0;
+    padding: 0.6rem 0.5rem;
+  }
+}
+
+@media (max-width: 870px) {
+  .header_menuLinks {
+    margin: 0.7rem 0;
+  }
+  .header_menuLinks a {
+    margin: 0 0.5rem 0.5rem 0;
+    padding: 0.6rem 0.5rem;
+  }
+  .header_intro {
+    padding: 0;
+  }
+  .header_description {
+    border-radius: 0;
+  }
+  .header_menuLinks a {
+    margin: 0 0.5rem 0.9rem 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .header_description {
+    padding: 3rem 1rem;
+  }
+  .header_menuLinks a {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .header_description {
+    padding: 2% 1rem;
+  }
+  .header_menuLinks a {
+    font-size: 0.9rem;
+    margin: 0 0.5rem 1.2rem 0;
+  }
+}

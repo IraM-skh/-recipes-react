@@ -38,3 +38,21 @@
 .contacts_link_container p a:hover {
   text-shadow: 0 0 2px #aabc03;
 }
+
+@media (max-width: 1800px) {
+  .footer {
+    background-size: 120px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .footer {
+    background-size: 100px;
+  }
+}
+
+@media (max-width: 600px) {
+  .warning {
+    margin-top: 1.5rem;
+  }
+}

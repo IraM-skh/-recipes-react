@@ -58,3 +58,30 @@ button[type="submit"]:hover {
   text-align: center;
   color: #c28400;
 }
+@media (max-width: 870px) {
+  .no_img_container {
+    height: 12rem;
+    width: 16rem;
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 0.9em;
+  }
+  .no_img_container {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 425px) {
+  .route_fragment {
+    padding: 0;
+  }
+}

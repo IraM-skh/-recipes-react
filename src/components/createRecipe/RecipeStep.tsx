@@ -20,13 +20,18 @@ const RecipeStep: React.FC<RecipeStepProps> = (props) => {
   };
   return (
     <div className={styles.recipe_step}>
-      <ImagePreloader
-        inputName={`recipe_step_img[${props.id}]`}
-        action={newRecipeSliceActions.setStepSrc}
-        id={props.id}
-        imgSrc={props.imgSrc}
-      ></ImagePreloader>
+      <div className={styles.preloader_external_container}>
+        <div className={styles.preloader_interior_container}>
+          <ImagePreloader
+            inputName={`recipe_step_img[${props.id}]`}
+            action={newRecipeSliceActions.setStepSrc}
+            id={props.id}
+            imgSrc={props.imgSrc}
+          ></ImagePreloader>
+        </div>
+      </div>
       <textarea name={props.id}></textarea>
+
       <button
         onClick={(_) => props.deleteStepHandler(_, dataForDeleteStepHandler)}
       >
