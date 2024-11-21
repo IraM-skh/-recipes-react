@@ -15,7 +15,7 @@
   align-items: center;
 }
 .login_form button {
-  padding: 3%;
+  padding: 2%;
 }
 
 .login_form button[type="button"] {
@@ -154,15 +154,29 @@
   text-decoration: none;
   color: #0000009a;
 }
-@media (max-width: 600px) {
-  .login_form {
+
+@media (max-width: 870px) {
+  .login_form button {
+    padding: 3%;
+  }
+}
+
+@media (max-width: 800px) {
+  .login_form label {
     flex-direction: column;
+    align-items: stretch;
   }
 }
 
 @media (max-width: 600px) {
   .resipe_info {
     flex-direction: column;
+  }
+  .login_form button {
+    padding: 4%;
+  }
+  .login_form input[type="text"] {
+    padding: 3.5%;
   }
 }
 
@@ -179,5 +193,11 @@
   }
   .account_info h2 {
     margin: 1rem;
+  }
+  .login_form button {
+    padding: 4.5%;
+  }
+  .login_form {
+    width: 70%;
   }
 }
