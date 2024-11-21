@@ -346,7 +346,10 @@ const CreateRecipePage: React.FC = () => {
                   />
                 </div>
               </div>
-              <textarea name="description"></textarea>
+              <textarea
+                name="description"
+                placeholder="Описание рецепта"
+              ></textarea>
             </div>
             <h3>Ингредиенты</h3>
             <div className="ingredients_container">

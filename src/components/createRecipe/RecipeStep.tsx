@@ -30,7 +30,7 @@ const RecipeStep: React.FC<RecipeStepProps> = (props) => {
           ></ImagePreloader>
         </div>
       </div>
-      <textarea name={props.id}></textarea>
+      <textarea name={props.id} placeholder="Описание шага"></textarea>
 
       <button
         onClick={(_) => props.deleteStepHandler(_, dataForDeleteStepHandler)}

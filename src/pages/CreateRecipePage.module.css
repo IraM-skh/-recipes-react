@@ -178,9 +178,6 @@ input[type="checkbox"]:checked + .custom_checkbox {
 }
 
 @media (max-width: 870px) {
-  .tags_container {
-    justify-content: center;
-  }
   .preloader_interior_container {
     width: 16rem;
   }
@@ -263,7 +260,7 @@ input[type="checkbox"]:checked + .custom_checkbox {
 @media (max-width: 425px) {
   .recipe_step button,
   .ingredient button {
-    padding: 4px;
+    padding: 4px 5px 6px;
   }
   .create_recipe h3 {
     margin: 1em;
